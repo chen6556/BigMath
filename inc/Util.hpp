@@ -2,6 +2,7 @@
 #include "BigInteger.hpp"
 #include "BigFloat.hpp"
 
+
 namespace Constant
 {
     static unsigned char CPU_CORES = 8;
@@ -10,17 +11,17 @@ namespace Constant
 class util
 {
 public:
-    static void append(BigInt& big_int, const char& ch)
+    static void append(BigInt& big_int, const char ch)
     {
         big_int._nums.push_back(ch);
     }
 
-    static void append_to_int_part(BigFloat& big_float, const char& ch)
+    static void append_to_int_part(BigFloat& big_float, const char ch)
     {
         big_float._int_part._nums.push_back(ch);
     }
 
-    static void append_to_float_part(BigFloat& big_float, const char& ch)
+    static void append_to_float_part(BigFloat& big_float, const char ch)
     {
         big_float._float_part._nums.push_back(ch);
     }

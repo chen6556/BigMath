@@ -1,25 +1,25 @@
 #pragma once
 #include <iostream>
-#include <list>
 #include <thread>
 #include "BigInteger.hpp"
 #include "Util.hpp"
 
+
 class FastBigInteger
 {
     private:
-        std::list<int> _nums;
+        std::vector<int> _nums;
         bool _negative = false;
-        FastBigInteger(const std::list<int>& big_int);
-        static void to_BigInt_subfunction(size_t index, std::list<int>::const_reverse_iterator it, const std::list<int>::const_reverse_iterator end, std::list<BigInt>& output);
+        FastBigInteger(const std::vector<int>& big_int);
+        static void to_BigInt_subfunction(size_t index, std::vector<int>::const_reverse_iterator it,
+            const std::vector<int>::const_reverse_iterator end, std::vector<BigInt>& output);
     public:
         
         FastBigInteger();
-        FastBigInteger(const char big_int);
         FastBigInteger(const char* big_int);
         FastBigInteger(const FastBigInteger& big_int);
         FastBigInteger(const BigInt& big_int);
-        FastBigInteger(size_t n);
+        FastBigInteger(long long n);
         ~FastBigInteger();
 
         bool operator>(const FastBigInteger& big_int) const;
@@ -32,10 +32,10 @@ class FastBigInteger
         bool negative() const;
         size_t length() const;
         FastBigInteger abs() const;
-        FastBigInteger opposite() const; 
-        FastBigInteger opposite(const bool& inplace);
+        FastBigInteger opposite() const;
+        FastBigInteger opposite(const bool inplace);
         FastBigInteger pow(const FastBigInteger& big_int) const;
-        FastBigInteger pow(const size_t& n) const;
+        FastBigInteger pow(const size_t n) const;
         FastBigInteger factorial() const;
         friend FastBigInteger operator-(const FastBigInteger& big_int);
 

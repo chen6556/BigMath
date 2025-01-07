@@ -1,22 +1,17 @@
 #include "FastBigInteger.hpp"
 
 typedef long long ll;
-const static BigInt SN_BI(size_t(INT_MAX) + 1);
+const static BigInt SN_BI(ll(INT_MAX) + 1);
 const static size_t LEN_SN = SN_BI.length(), SN = size_t(INT_MAX) + 1;
 
 FastBigInteger::FastBigInteger(){}
-
-FastBigInteger::FastBigInteger(const char big_int)
-{
-    _nums.push_back(big_int - 48);
-}
 
 FastBigInteger::FastBigInteger(const char* big_int)
 {
     BigInt temp_int(big_int), big_int_b;
     _negative = temp_int.negative();
-    BigInt big_int_a = temp_int.abs(), temp_num, ans('0');
-    const BigInt zero('0'), one('1'), ten("10");
+    BigInt big_int_a = temp_int.abs(), temp_num, ans(0ll);
+    const BigInt zero(0ll), one(1ll), ten(10ll);
     size_t len_a = temp_int.length();
     while (big_int_a >= SN_BI)
     {
@@ -66,7 +61,7 @@ FastBigInteger::FastBigInteger(const char* big_int)
     {
         _nums.pop_back();
     }
-    _nums.reverse();
+    std::reverse(_nums.begin(), _nums.end());
 }
 
 FastBigInteger::FastBigInteger(const FastBigInteger& big_int)
@@ -75,12 +70,12 @@ FastBigInteger::FastBigInteger(const FastBigInteger& big_int)
     _negative = big_int._negative;
 }
 
-FastBigInteger::FastBigInteger(const std::list<int>& big_int)
+FastBigInteger::FastBigInteger(const std::vector<int>& big_int)
 {
     _nums.assign(big_int.cbegin(), big_int.cend());
     while (!_nums.empty() && _nums.front() == 0)
     {
-        _nums.pop_front();
+        _nums.erase(_nums.begin());
     }
     if (_nums.empty())
     {
@@ -93,8 +88,8 @@ FastBigInteger::FastBigInteger(const BigInt& big_int)
 {
     BigInt temp_int(big_int), big_int_b;
     _negative = temp_int.negative();
-    BigInt big_int_a = temp_int.abs(), temp_num, ans('0');
-    const BigInt zero('0'), one('1'), ten("10");
+    BigInt big_int_a = temp_int.abs(), temp_num, ans(0ll);
+    const BigInt zero(0ll), one(1ll), ten(10ll);
     size_t len_a = temp_int.length();
     while (big_int_a >= SN_BI)
     {
@@ -144,17 +139,18 @@ FastBigInteger::FastBigInteger(const BigInt& big_int)
     {
         _nums.pop_back();
     }
-    _nums.reverse();
+    std::reverse(_nums.begin(), _nums.end());
 }
 
-FastBigInteger::FastBigInteger(size_t n)
+FastBigInteger::FastBigInteger(long long n)
 {
-    std::list<int> temp;
+    _negative = n < 0;
     while (n != 0)
     {
-        temp.push_front(n % SN);
+        _nums.push_back(n % SN);
         n /= SN;
     }
+    std::reverse(_nums.begin(), _nums.end());
 }
 
 FastBigInteger::~FastBigInteger(){}
@@ -177,7 +173,7 @@ bool FastBigInteger::operator>(const FastBigInteger& big_int) const
     }
     else
     {
-        std::list<int>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
+        std::vector<int>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
         while (it_a != end_of_a && *it_a == *it_b)
         {
             ++it_a;
@@ -210,7 +206,7 @@ bool FastBigInteger::operator<(const FastBigInteger& big_int) const
     }
     else
     {
-        std::list<int>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
+        std::vector<int>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
         while (it_a != end_of_a && *it_a == *it_b)
         {
             ++it_a;
@@ -235,7 +231,7 @@ bool FastBigInteger::operator==(const FastBigInteger& big_int) const
     }
     else
     {
-        std::list<int>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
+        std::vector<int>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
         while (it_a != end_of_a && *it_a == *it_b)
         {
             ++it_a;
@@ -253,7 +249,7 @@ bool FastBigInteger::operator!=(const FastBigInteger& big_int) const
     }
     else
     {
-        std::list<int>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
+        std::vector<int>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
         while (it_a != end_of_a && *it_a == *it_b)
         {
             ++it_a;
@@ -279,7 +275,7 @@ bool FastBigInteger::operator>=(const FastBigInteger& big_int) const
     }
     else
     {
-        std::list<int>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
+        std::vector<int>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
         while (it_a != end_of_a && *it_a == *it_b)
         {
             ++it_a;
@@ -312,7 +308,7 @@ bool FastBigInteger::operator<=(const FastBigInteger& big_int) const
     }
     else
     {
-        std::list<int>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
+        std::vector<int>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
         while (it_a != end_of_a && *it_a == *it_b)
         {
             ++it_a;
@@ -345,8 +341,8 @@ FastBigInteger FastBigInteger::abs() const
 {
     if (_negative)
     {
-        std::list<int> temp;
-        for (const int& ch : _nums)
+        std::vector<int> temp;
+        for (const int ch : _nums)
         {
             temp.push_back(-ch);
         }
@@ -363,16 +359,16 @@ FastBigInteger FastBigInteger::opposite() const
     return -*this;
 }
 
-FastBigInteger FastBigInteger::opposite(const bool& inplace = true)
+FastBigInteger FastBigInteger::opposite(const bool inplace)
 {
-    if (*this == FastBigInteger('0'))
+    if (*this == FastBigInteger(0ll))
     {
         return *this;
     }
     if (inplace)
     {
         _negative = !_negative;
-        std::list<int>::iterator it = _nums.begin(), end = _nums.end();
+        std::vector<int>::iterator it = _nums.begin(), end = _nums.end();
         while (it != end)
         {
             *it = -*it;
@@ -388,13 +384,13 @@ FastBigInteger FastBigInteger::opposite(const bool& inplace = true)
 
 FastBigInteger FastBigInteger::pow(const FastBigInteger& big_int) const
 {
-    if (big_int <= FastBigInteger('0'))
+    if (big_int <= FastBigInteger(0ll))
     {
-        return FastBigInteger('1');
+        return FastBigInteger(1ll);
     }
     FastBigInteger temp(*this);
-    FastBigInteger i('1');
-    const FastBigInteger two('2');
+    FastBigInteger i(1ll);
+    const FastBigInteger two(2ll);
     while (i < big_int)
     {
         i *= two;
@@ -421,11 +417,11 @@ FastBigInteger FastBigInteger::pow(const FastBigInteger& big_int) const
     return temp;
 }
 
-FastBigInteger FastBigInteger::pow(const size_t& n) const
+FastBigInteger FastBigInteger::pow(const size_t n) const
 {
     if (n == 0)
     {
-        return FastBigInteger('1');
+        return FastBigInteger(1ll);
     }
     FastBigInteger temp(*this);
     size_t i = 1;
@@ -456,12 +452,12 @@ FastBigInteger FastBigInteger::pow(const size_t& n) const
 
 FastBigInteger FastBigInteger::factorial() const
 {
-    if (*this == FastBigInteger('0'))
+    if (*this == FastBigInteger(0ll))
     {
-        return FastBigInteger('1');
+        return FastBigInteger(1ll);
     }
     FastBigInteger ans(this->abs()), count(this->abs());
-    const FastBigInteger two('2');
+    const FastBigInteger two(2ll);
     while (count > two)
     {
         ans *= --count;
@@ -471,12 +467,12 @@ FastBigInteger FastBigInteger::factorial() const
 
 FastBigInteger operator-(const FastBigInteger& big_int)
 {
-    if (big_int == FastBigInteger('0'))
+    if (big_int == FastBigInteger(0ll))
     {
         return big_int;
     }
-    std::list<int> temp;
-    for (const int& ch : big_int._nums)
+    std::vector<int> temp;
+    for (const int ch : big_int._nums)
     {
         temp.push_back(-ch);
     }
@@ -487,21 +483,21 @@ FastBigInteger operator-(const FastBigInteger& big_int)
 
 FastBigInteger FastBigInteger::operator+(const FastBigInteger& big_int) const
 {
-    std::list<int> temp_nums;
+    std::vector<int> temp_nums;
     int temp_num = 0;
-    std::list<int> * nums_a, * nums_b;
-    std::list<int>::const_reverse_iterator it_a, it_b, end_of_a;
+    std::vector<int> * nums_a, * nums_b;
+    std::vector<int>::const_reverse_iterator it_a, it_b, end_of_a;
     bool negative_a, negative_b;
     
     if (this->abs() < big_int.abs())
     {
-        nums_a = const_cast<std::list<int>*>(&(big_int._nums));
-        nums_b = const_cast<std::list<int>*>(&_nums);
+        nums_a = const_cast<std::vector<int>*>(&(big_int._nums));
+        nums_b = const_cast<std::vector<int>*>(&_nums);
     }
     else
     {
-        nums_a = const_cast<std::list<int>*>(&_nums);
-        nums_b = const_cast<std::list<int>*>(&(big_int._nums));
+        nums_a = const_cast<std::vector<int>*>(&_nums);
+        nums_b = const_cast<std::vector<int>*>(&(big_int._nums));
     }
     negative_a = nums_a->front() < 0;
     negative_b = nums_b->front() < 0; 
@@ -560,7 +556,7 @@ FastBigInteger FastBigInteger::operator+(const FastBigInteger& big_int) const
     {
         temp_nums.pop_back();
     }
-    temp_nums.reverse();
+    std::reverse(temp_nums.begin(), temp_nums.end());
     return FastBigInteger(temp_nums);
 }
 
@@ -571,25 +567,25 @@ FastBigInteger FastBigInteger::operator-(const FastBigInteger& big_int) const
 
 FastBigInteger FastBigInteger::operator*(const FastBigInteger& big_int) const
 {
-    const FastBigInteger zero('0');
+    const FastBigInteger zero(0ll);
     if (*this == zero || big_int == zero)
     {
         return zero;
     }
-    std::list<int> temp_nums_mul, temp_nums_add, ans_nums;
+    std::vector<int> temp_nums_mul, temp_nums_add, ans_nums;
     int temp_num = 0;
-    std::list<int> * nums_a, * nums_b;
-    std::list<int>::const_reverse_iterator it_a, it_b, end_of_a;
-    std::list<int>::const_iterator it_add, end_of_add, it_mul, end_of_mul;
+    std::vector<int> * nums_a, * nums_b;
+    std::vector<int>::const_reverse_iterator it_a, it_b, end_of_a;
+    std::vector<int>::const_iterator it_add, end_of_add, it_mul, end_of_mul;
     if (_nums.size() < big_int._nums.size())
     {
-        nums_a = const_cast<std::list<int>*>(&(big_int._nums));
-        nums_b = const_cast<std::list<int>*>(&_nums);
+        nums_a = const_cast<std::vector<int>*>(&(big_int._nums));
+        nums_b = const_cast<std::vector<int>*>(&_nums);
     }
     else
     {
-        nums_a = const_cast<std::list<int>*>(&_nums);
-        nums_b = const_cast<std::list<int>*>(&(big_int._nums));
+        nums_a = const_cast<std::vector<int>*>(&_nums);
+        nums_b = const_cast<std::vector<int>*>(&(big_int._nums));
     }
     it_b = nums_b->crbegin();
     end_of_a = nums_a->crend();
@@ -638,14 +634,14 @@ FastBigInteger FastBigInteger::operator*(const FastBigInteger& big_int) const
             temp_num = 0;
         }        
     }
-    ans_nums.reverse();
+    std::reverse(ans_nums.begin(), ans_nums.end());
     return FastBigInteger(ans_nums);
 }
 
 FastBigInteger FastBigInteger::operator/(const FastBigInteger& big_int) const
 {
-    FastBigInteger big_int_a = this->abs(), big_int_b, temp_num, ans('0');
-    const FastBigInteger abs_of_big_int = big_int.abs(), zero('0'), one('1'), sn(size_t(INT_MAX) + 1);
+    FastBigInteger big_int_a = this->abs(), big_int_b, temp_num, ans(0ll);
+    const FastBigInteger abs_of_big_int = big_int.abs(), zero(0ll), one(1ll), sn(size_t(INT_MAX) + 1);
     if (big_int_a < abs_of_big_int || *this == zero)
     {
         return zero;
@@ -691,7 +687,7 @@ FastBigInteger FastBigInteger::operator/(const FastBigInteger& big_int) const
 FastBigInteger FastBigInteger::operator%(const FastBigInteger& big_int) const
 {
     FastBigInteger big_int_a = this->abs(), big_int_b, temp_num;
-    const FastBigInteger abs_of_big_int = big_int.abs(), zero('0'), one('1'), sn(size_t(INT_MAX) + 1);
+    const FastBigInteger abs_of_big_int = big_int.abs(), zero(0ll), one(1ll), sn(size_t(INT_MAX) + 1);
     if (*this == zero || *this == big_int || big_int == one)
     {
         return zero;
@@ -739,20 +735,20 @@ void FastBigInteger::operator=(const FastBigInteger& big_int)
 
 void FastBigInteger::operator+=(const FastBigInteger& big_int)
 {
-    std::list<int> temp_nums;
+    std::vector<int> temp_nums;
     int temp_num = 0;
-    std::list<int> * nums_a, * nums_b;
-    std::list<int>::const_reverse_iterator it_a, it_b, end_of_a;
+    std::vector<int> * nums_a, * nums_b;
+    std::vector<int>::const_reverse_iterator it_a, it_b, end_of_a;
     bool negative_a, negative_b;
     if (this->abs() < big_int.abs())
     {
-        nums_a = const_cast<std::list<int>*>(&(big_int._nums));
-        nums_b = const_cast<std::list<int>*>(&_nums);
+        nums_a = const_cast<std::vector<int>*>(&(big_int._nums));
+        nums_b = const_cast<std::vector<int>*>(&_nums);
     }
     else
     {
-        nums_a = const_cast<std::list<int>*>(&_nums);
-        nums_b = const_cast<std::list<int>*>(&(big_int._nums));
+        nums_a = const_cast<std::vector<int>*>(&_nums);
+        nums_b = const_cast<std::vector<int>*>(&(big_int._nums));
     }
     negative_a = nums_a->front() < 0;
     negative_b = nums_b->front() < 0; 
@@ -822,7 +818,7 @@ void FastBigInteger::operator-=(const FastBigInteger& big_int)
 
 void FastBigInteger::operator*=(const FastBigInteger& big_int)
 {
-    const FastBigInteger zero('0');
+    const FastBigInteger zero(0ll);
     if (*this == zero || big_int == zero)
     {
         _negative = false;
@@ -830,20 +826,20 @@ void FastBigInteger::operator*=(const FastBigInteger& big_int)
         _nums.push_back(0);
         return;
     }
-    std::list<int> temp_nums_mul, temp_nums_add, ans_nums;
+    std::vector<int> temp_nums_mul, temp_nums_add, ans_nums;
     int temp_num = 0;
-    std::list<int> * nums_a, * nums_b;
-    std::list<int>::const_reverse_iterator it_a, it_b, end_of_a;
-    std::list<int>::const_iterator it_add, end_of_add, it_mul, end_of_mul;
+    std::vector<int> * nums_a, * nums_b;
+    std::vector<int>::const_reverse_iterator it_a, it_b, end_of_a;
+    std::vector<int>::const_iterator it_add, end_of_add, it_mul, end_of_mul;
     if (_nums.size() < big_int._nums.size())
     {
-        nums_a = const_cast<std::list<int>*>(&(big_int._nums));
-        nums_b = const_cast<std::list<int>*>(&_nums);
+        nums_a = const_cast<std::vector<int>*>(&(big_int._nums));
+        nums_b = const_cast<std::vector<int>*>(&_nums);
     }
     else
     {
-        nums_a = const_cast<std::list<int>*>(&_nums);
-        nums_b = const_cast<std::list<int>*>(&(big_int._nums));
+        nums_a = const_cast<std::vector<int>*>(&_nums);
+        nums_b = const_cast<std::vector<int>*>(&(big_int._nums));
     }
     it_b = nums_b->crbegin();
     end_of_a = nums_a->crend();
@@ -898,8 +894,8 @@ void FastBigInteger::operator*=(const FastBigInteger& big_int)
 
 void FastBigInteger::operator/=(const FastBigInteger& big_int)
 {
-    FastBigInteger big_int_a = this->abs(), big_int_b, temp_num, ans('0');
-    const FastBigInteger abs_of_big_int = big_int.abs(), zero('0'), one('1'), sn(size_t(INT_MAX) + 1);
+    FastBigInteger big_int_a = this->abs(), big_int_b, temp_num, ans(0ll);
+    const FastBigInteger abs_of_big_int = big_int.abs(), zero(0ll), one(1ll), sn(size_t(INT_MAX) + 1);
     if (big_int_a < abs_of_big_int || *this == zero)
     {
         _negative = false;
@@ -950,8 +946,8 @@ void FastBigInteger::operator/=(const FastBigInteger& big_int)
 
 void FastBigInteger::operator%=(const FastBigInteger& big_int)
 {
-    FastBigInteger big_int_a = this->abs(), big_int_b, zero('0'), one('1'), temp_num;
-    const FastBigInteger abs_of_big_int = big_int.abs(), sn(size_t(INT_MAX) + 1);
+    FastBigInteger big_int_a = this->abs(), big_int_b, zero(0ll), one(1ll), temp_num;
+    const FastBigInteger abs_of_big_int = big_int.abs(), sn(ll(INT_MAX) + 1);
     if (*this == zero || *this == big_int || big_int == one)
     {
         _negative = false;
@@ -994,9 +990,9 @@ void FastBigInteger::operator%=(const FastBigInteger& big_int)
 
 FastBigInteger FastBigInteger::operator++()
 {
-    std::list<int> temp_nums;
+    std::vector<int> temp_nums;
     int temp_num = 0;
-    std::list<int>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
+    std::vector<int>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
     if (_negative && *it_a == 0) // 借位
     {
         temp_nums.push_back(INT_MIN);
@@ -1036,9 +1032,9 @@ FastBigInteger FastBigInteger::operator++()
 
 FastBigInteger FastBigInteger::operator++(const int)
 {
-    std::list<int> temp_nums;
+    std::vector<int> temp_nums;
     int temp_num = 0;
-    std::list<int>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
+    std::vector<int>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
     if (_negative && *it_a == 0) // 借位
     {
         temp_nums.push_back(INT_MIN);
@@ -1079,9 +1075,9 @@ FastBigInteger FastBigInteger::operator++(const int)
 
 FastBigInteger FastBigInteger::operator--()
 {
-    std::list<int> temp_nums;
+    std::vector<int> temp_nums;
     int temp_num = 0;
-    std::list<int>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
+    std::vector<int>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
     if (!_negative && _nums.size() > 1 && *it_a == 0) // 借位
     {
         temp_nums.push_back(INT_MAX);
@@ -1121,9 +1117,9 @@ FastBigInteger FastBigInteger::operator--()
 
 FastBigInteger FastBigInteger::operator--(const int)
 {
-    std::list<int> temp_nums;
+    std::vector<int> temp_nums;
     int temp_num = 0;
-    std::list<int>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
+    std::vector<int>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
     if (!_negative && _nums.size() > 1 && *it_a == 0) // 借位
     {
         temp_nums.push_back(INT_MAX);
@@ -1166,10 +1162,10 @@ FastBigInteger FastBigInteger::operator--(const int)
 
 std::string FastBigInteger::to_str() const
 {
-    BigInt ans('0'), temp('1');
+    BigInt ans(0ll), temp(1ll);
     size_t i = 0;
-    std::list<int>::const_reverse_iterator it = _nums.crbegin();
-    const std::list<int>::const_reverse_iterator end = _nums.crend();
+    std::vector<int>::const_reverse_iterator it = _nums.crbegin();
+    const std::vector<int>::const_reverse_iterator end = _nums.crend();
     while (it != end)
     {
         ans += (BigInt(*it++) * temp);
@@ -1180,15 +1176,15 @@ std::string FastBigInteger::to_str() const
 
 BigInt FastBigInteger::to_BigInt() const
 {
-    std::list<int>::const_reverse_iterator it_a = _nums.crbegin(), it_b = it_a;
-    const std::list<int>::const_reverse_iterator end = _nums.crend(); 
+    std::vector<int>::const_reverse_iterator it_a = _nums.crbegin(), it_b = it_a;
+    const std::vector<int>::const_reverse_iterator end = _nums.crend(); 
     const size_t step = _nums.size() / Constant::CPU_CORES;
-    BigInt ans('0');
+    BigInt ans(0ll);
     if (step > 2)
     {
-        std::list<std::thread> threads;
+        std::vector<std::thread> threads;
         unsigned char i = 0;
-        std::list<BigInt> output;
+        std::vector<BigInt> output;
         while ( i < Constant::CPU_CORES - 1)
         {   
             for (size_t j = 0; j < step; ++j, ++it_b);
@@ -1208,7 +1204,7 @@ BigInt FastBigInteger::to_BigInt() const
     }
     else
     {
-        BigInt temp('1');
+        BigInt temp(1ll);
         while (it_a != end)
         {
             ans += (BigInt(*it_a++) * temp);
@@ -1220,9 +1216,9 @@ BigInt FastBigInteger::to_BigInt() const
 
 /* --------------------------------------------------------- */
 
-void FastBigInteger::to_BigInt_subfunction(size_t index, std::list<int>::const_reverse_iterator it, const std::list<int>::const_reverse_iterator end, std::list<BigInt>& output)
+void FastBigInteger::to_BigInt_subfunction(size_t index, std::vector<int>::const_reverse_iterator it, const std::vector<int>::const_reverse_iterator end, std::vector<BigInt>& output)
 {
-    BigInt ans('0'), temp = SN_BI.pow(index);
+    BigInt ans(0ll), temp = SN_BI.pow(index);
     while (it != end)
     {
         ans += (BigInt(*it++) * temp);
@@ -1233,15 +1229,15 @@ void FastBigInteger::to_BigInt_subfunction(size_t index, std::list<int>::const_r
 
 std::ostream& operator<<(std::ostream& o, const FastBigInteger& big_int)
 {
-    std::list<int>::const_reverse_iterator it_a = big_int._nums.crbegin(), it_b = it_a;
-    const std::list<int>::const_reverse_iterator end = big_int._nums.crend();
+    std::vector<int>::const_reverse_iterator it_a = big_int._nums.crbegin(), it_b = it_a;
+    const std::vector<int>::const_reverse_iterator end = big_int._nums.crend();
     const size_t step = big_int.length() / Constant::CPU_CORES;
-    BigInt ans('0');
+    BigInt ans(0ll);
     if (step > 2)
     {
         unsigned char i = 0;
-        std::list<std::thread> threads;
-        std::list<BigInt> output;
+        std::vector<std::thread> threads;
+        std::vector<BigInt> output;
         while ( i < Constant::CPU_CORES - 1)
         {   
             for (size_t j = 0; j < step; ++j, ++it_b);
@@ -1261,7 +1257,7 @@ std::ostream& operator<<(std::ostream& o, const FastBigInteger& big_int)
     }
     else
     {
-        BigInt temp('1');
+        BigInt temp(1ll);
         while (it_a != end)
         {
             ans += (BigInt(*it_a++) * temp);

@@ -1,8 +1,6 @@
 #pragma once
-#include <iostream>
-#include <list>
-#include <string>
 #include "BigInteger.hpp"
+
 
 class BigFloat
 {
@@ -30,16 +28,16 @@ class BigFloat
 
         bool negative() const;
         BigFloat round(const BigFloat& big_float) const;
-        BigFloat round(const size_t& n) const;
-        BigFloat round(const BigFloat& big_float, const bool& inplace);
-        BigFloat round(const size_t& n, const bool& inplace);
+        BigFloat round(const size_t n) const;
+        BigFloat round(const BigFloat& big_float, const bool inplace);
+        BigFloat round(const size_t n, const bool inplace);
         BigFloat abs() const;
         BigFloat opposite() const;
-        BigFloat opposite(const bool& inplace);
+        BigFloat opposite(const bool inplace);
         BigFloat pow(const BigFloat& big_float) const;
-        BigFloat pow(const size_t& n) const;
+        BigFloat pow(const size_t n) const;
         BigFloat rad(const BigFloat& big_flaot) const;
-        BigFloat rad(const size_t& n) const;
+        BigFloat rad(const size_t n) const;
         friend BigFloat operator-(const BigFloat& big_float);
 
         BigFloat operator+(const BigFloat& big_float) const;
@@ -68,16 +66,16 @@ class BigFloat
         size_t length_of_int_part() const;
         size_t length_of_float_part() const;
 
-        std::list<char>::const_iterator ibegin() const;
-        std::list<char>::const_iterator iend() const;
-        std::list<char>::const_reverse_iterator irbegin() const;
-        std::list<char>::const_reverse_iterator irend() const;
+        std::vector<char>::const_iterator ibegin() const;
+        std::vector<char>::const_iterator iend() const;
+        std::vector<char>::const_reverse_iterator irbegin() const;
+        std::vector<char>::const_reverse_iterator irend() const;
 
-        std::list<char>::const_iterator fbegin() const;
-        std::list<char>::const_iterator fend() const;
-        std::list<char>::const_reverse_iterator frbegin() const;
-        std::list<char>::const_reverse_iterator frend() const;
+        std::vector<char>::const_iterator fbegin() const;
+        std::vector<char>::const_iterator fend() const;
+        std::vector<char>::const_reverse_iterator frbegin() const;
+        std::vector<char>::const_reverse_iterator frend() const;
 
-        const char& operator[](long i) const;
-        char& operator[](long i);
+        char operator[](const long long i) const;
+        char& operator[](const long long i);
 };

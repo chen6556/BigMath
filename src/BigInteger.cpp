@@ -1,11 +1,7 @@
 #include "BigInteger.hpp"
 
-BigInteger::BigInteger(){}
 
-BigInteger::BigInteger(const char big_int)
-{
-    _nums.push_back(big_int - 48);
-}
+BigInteger::BigInteger(){}
 
 BigInteger::BigInteger(const char* big_int)
 {
@@ -45,12 +41,12 @@ BigInteger::BigInteger(const BigInteger& big_int)
     _negative = big_int._negative;
 }
 
-BigInteger::BigInteger(const std::list<char>& big_int)
+BigInteger::BigInteger(const std::vector<char>& big_int)
 {
     _nums.assign(big_int.cbegin(), big_int.cend());
     while (!_nums.empty() && _nums.front() == 0)
     {
-        _nums.pop_front();
+        _nums.erase(_nums.begin());
     }
     if (_nums.empty())
     {
@@ -59,23 +55,15 @@ BigInteger::BigInteger(const std::list<char>& big_int)
     _negative = _nums.front() < 0;
 }
 
-BigInteger::BigInteger(size_t n)
-{
-    while (n != 0)
-    {
-        _nums.push_front(n%10);
-        n /= 10;
-    }
-}
-
-BigInteger::BigInteger(int n)
+BigInteger::BigInteger(long long n)
 {
     _negative = n < 0;
     while (n != 0)
     {
-        _nums.push_front(n%10);
+        _nums.push_back(n%10);
         n /= 10;
     }
+    std::reverse(_nums.begin(), _nums.end());
 }
 
 BigInteger::~BigInteger(){}
@@ -98,7 +86,7 @@ bool BigInteger::operator>(const BigInteger& big_int) const
     }
     else
     {
-        std::list<char>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
+        std::vector<char>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
         while (it_a != end_of_a && *it_a == *it_b)
         {
             ++it_a;
@@ -131,7 +119,7 @@ bool BigInteger::operator<(const BigInteger& big_int) const
     }
     else
     {
-        std::list<char>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
+        std::vector<char>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
         while (it_a != end_of_a && *it_a == *it_b)
         {
             ++it_a;
@@ -156,7 +144,7 @@ bool BigInteger::operator==(const BigInteger& big_int) const
     }
     else
     {
-        std::list<char>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
+        std::vector<char>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
         while (it_a != end_of_a && *it_a == *it_b)
         {
             ++it_a;
@@ -174,7 +162,7 @@ bool BigInteger::operator!=(const BigInteger& big_int) const
     }
     else
     {
-        std::list<char>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
+        std::vector<char>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
         while (it_a != end_of_a && *it_a == *it_b)
         {
             ++it_a;
@@ -200,7 +188,7 @@ bool BigInteger::operator>=(const BigInteger& big_int) const
     }
     else
     {
-        std::list<char>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
+        std::vector<char>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
         while (it_a != end_of_a && *it_a == *it_b)
         {
             ++it_a;
@@ -233,7 +221,7 @@ bool BigInteger::operator<=(const BigInteger& big_int) const
     }
     else
     {
-        std::list<char>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
+        std::vector<char>::const_iterator it_a = _nums.cbegin(), it_b = big_int._nums.cbegin(), end_of_a = _nums.cend();
         while (it_a != end_of_a && *it_a == *it_b)
         {
             ++it_a;
@@ -266,7 +254,7 @@ BigInteger BigInteger::abs() const
 {
     if (_negative)
     {
-        std::list<char> temp;
+        std::vector<char> temp;
         for (const char& ch : _nums)
         {
             temp.push_back(-ch);
@@ -284,16 +272,16 @@ BigInteger BigInteger::opposite() const
     return -*this;
 }
 
-BigInteger BigInteger::opposite(const bool& inplace = true)
+BigInteger BigInteger::opposite(const bool inplace)
 {
-    if (*this == BigInteger('0'))
+    if (*this == BigInteger(0ll))
     {
         return *this;
     }
     if (inplace)
     {
         _negative = !_negative;
-        std::list<char>::iterator it = _nums.begin(), end = _nums.end();
+        std::vector<char>::iterator it = _nums.begin(), end = _nums.end();
         while (it != end)
         {
             *it = -*it;
@@ -309,13 +297,13 @@ BigInteger BigInteger::opposite(const bool& inplace = true)
 
 BigInteger BigInteger::pow(const BigInteger& big_int) const
 {
-    if (big_int <= BigInteger('0'))
+    if (big_int <= BigInteger(0ll))
     {
-        return BigInteger('1');
+        return BigInteger(1ll);
     }
     BigInteger ans(*this);
-    BigInteger i('1');
-    const BigInteger two('2');
+    BigInteger i(1ll);
+    const BigInteger two(2ll);
     while (i < big_int)
     {
         i *= two;
@@ -341,11 +329,11 @@ BigInteger BigInteger::pow(const BigInteger& big_int) const
     return ans;
 }
 
-BigInteger BigInteger::pow(const size_t& n) const
+BigInteger BigInteger::pow(const size_t n) const
 {
     if (n == 0)
     {
-        return BigInteger('1');
+        return BigInteger(1ll);
     }
     size_t i = 1;
     BigInteger ans(*this);
@@ -376,12 +364,12 @@ BigInteger BigInteger::pow(const size_t& n) const
 
 BigInteger BigInteger::factorial() const
 {
-    if (*this == BigInteger('0'))
+    if (*this == BigInteger(0ll))
     {
-        return BigInteger('1');
+        return BigInteger(1ll);
     }
     BigInteger ans(this->abs()), count(this->abs());
-    const BigInteger two('2');
+    const BigInteger two(2ll);
     while (count > two)
     {
         ans *= --count;
@@ -391,12 +379,12 @@ BigInteger BigInteger::factorial() const
 
 BigInteger operator-(const BigInteger& big_int)
 {
-    if (big_int == BigInteger('0'))
+    if (big_int == BigInteger(0ll))
     {
         return big_int;
     }
-    std::list<char> temp;
-    for (const char& ch : big_int._nums)
+    std::vector<char> temp;
+    for (const char ch : big_int._nums)
     {
         temp.push_back(-ch);
     }
@@ -407,21 +395,21 @@ BigInteger operator-(const BigInteger& big_int)
 
 BigInteger BigInteger::operator+(const BigInteger& big_int) const
 {
-    std::list<char> temp_nums;
+    std::vector<char> temp_nums;
     char temp_num = 0;
-    std::list<char> * nums_a, * nums_b;
-    std::list<char>::const_reverse_iterator it_a, it_b, end_of_a;
+    std::vector<char> * nums_a, * nums_b;
+    std::vector<char>::const_reverse_iterator it_a, it_b, end_of_a;
     bool negative_a, negative_b;
     
     if (this->abs() < big_int.abs())
     {
-        nums_a = const_cast<std::list<char>*>(&(big_int._nums));
-        nums_b = const_cast<std::list<char>*>(&_nums);
+        nums_a = const_cast<std::vector<char>*>(&(big_int._nums));
+        nums_b = const_cast<std::vector<char>*>(&_nums);
     }
     else
     {
-        nums_a = const_cast<std::list<char>*>(&_nums);
-        nums_b = const_cast<std::list<char>*>(&(big_int._nums));
+        nums_a = const_cast<std::vector<char>*>(&_nums);
+        nums_b = const_cast<std::vector<char>*>(&(big_int._nums));
     }
     negative_a = nums_a->front() < 0;
     negative_b = nums_b->front() < 0; 
@@ -480,7 +468,7 @@ BigInteger BigInteger::operator+(const BigInteger& big_int) const
     {
         temp_nums.pop_back();
     }
-    temp_nums.reverse();
+    std::reverse(temp_nums.begin(), temp_nums.end());
     return BigInteger(temp_nums);
 }
 
@@ -491,25 +479,25 @@ BigInteger BigInteger::operator-(const BigInteger& big_int) const
 
 BigInteger BigInteger::operator*(const BigInteger& big_int) const
 {
-    const BigInteger zero('0');
+    const BigInteger zero(0ll);
     if (*this == zero || big_int == zero)
     {
         return zero;
     }
-    std::list<char> temp_nums_mul, temp_nums_add, ans_nums;
+    std::vector<char> temp_nums_mul, temp_nums_add, ans_nums;
     char temp_num = 0;
-    std::list<char> * nums_a, * nums_b;
-    std::list<char>::const_reverse_iterator it_a, it_b, end_of_a;
-    std::list<char>::const_iterator it_add, end_of_add, it_mul, end_of_mul;
+    std::vector<char> * nums_a, * nums_b;
+    std::vector<char>::const_reverse_iterator it_a, it_b, end_of_a;
+    std::vector<char>::const_iterator it_add, end_of_add, it_mul, end_of_mul;
     if (_nums.size() < big_int._nums.size())
     {
-        nums_a = const_cast<std::list<char>*>(&(big_int._nums));
-        nums_b = const_cast<std::list<char>*>(&_nums);
+        nums_a = const_cast<std::vector<char>*>(&(big_int._nums));
+        nums_b = const_cast<std::vector<char>*>(&_nums);
     }
     else
     {
-        nums_a = const_cast<std::list<char>*>(&_nums);
-        nums_b = const_cast<std::list<char>*>(&(big_int._nums));
+        nums_a = const_cast<std::vector<char>*>(&_nums);
+        nums_b = const_cast<std::vector<char>*>(&(big_int._nums));
     }
     it_b = nums_b->crbegin();
     end_of_a = nums_a->crend();
@@ -558,14 +546,14 @@ BigInteger BigInteger::operator*(const BigInteger& big_int) const
             temp_num = 0;
         }        
     }
-    ans_nums.reverse();
+    std::reverse(ans_nums.begin(), ans_nums.end());
     return BigInteger(ans_nums);
 }
 
 BigInteger BigInteger::operator/(const BigInteger& big_int) const
 {
-    BigInteger big_int_a = this->abs(), big_int_b, temp_num, ans('0');
-    const BigInteger abs_of_big_int = big_int.abs(), zero('0'), one('1'), ten("10");
+    BigInteger big_int_a = this->abs(), big_int_b, temp_num, ans(0ll);
+    const BigInteger abs_of_big_int = big_int.abs(), zero(0ll), one(1ll), ten(10ll);
     if (big_int_a < abs_of_big_int || *this == zero)
     {
         return zero;
@@ -611,7 +599,7 @@ BigInteger BigInteger::operator/(const BigInteger& big_int) const
 BigInteger BigInteger::operator%(const BigInteger& big_int) const
 {
     BigInteger big_int_a = this->abs(), big_int_b, temp_num;
-    const BigInteger abs_of_big_int = big_int.abs(), zero('0'), one('1'), ten("10");
+    const BigInteger abs_of_big_int = big_int.abs(), zero(0ll), one(1ll), ten(10ll);
     if (*this == zero || *this == big_int || big_int == one)
     {
         return zero;
@@ -659,20 +647,20 @@ void BigInteger::operator=(const BigInteger& big_int)
 
 void BigInteger::operator+=(const BigInteger& big_int)
 {
-    std::list<char> temp_nums;
+    std::vector<char> temp_nums;
     char temp_num = 0;
-    std::list<char> * nums_a, * nums_b;
-    std::list<char>::const_reverse_iterator it_a, it_b, end_of_a;
+    std::vector<char> * nums_a, * nums_b;
+    std::vector<char>::const_reverse_iterator it_a, it_b, end_of_a;
     bool negative_a, negative_b;
     if (this->abs() < big_int.abs())
     {
-        nums_a = const_cast<std::list<char>*>(&(big_int._nums));
-        nums_b = const_cast<std::list<char>*>(&_nums);
+        nums_a = const_cast<std::vector<char>*>(&(big_int._nums));
+        nums_b = const_cast<std::vector<char>*>(&_nums);
     }
     else
     {
-        nums_a = const_cast<std::list<char>*>(&_nums);
-        nums_b = const_cast<std::list<char>*>(&(big_int._nums));
+        nums_a = const_cast<std::vector<char>*>(&_nums);
+        nums_b = const_cast<std::vector<char>*>(&(big_int._nums));
     }
     negative_a = nums_a->front() < 0;
     negative_b = nums_b->front() < 0; 
@@ -743,7 +731,7 @@ void BigInteger::operator-=(const BigInteger& big_int)
 
 void BigInteger::operator*=(const BigInteger& big_int)
 {
-    const BigInteger zero('0');
+    const BigInteger zero(0ll);
     if (*this == zero || big_int == zero)
     {
         _negative = false;
@@ -751,20 +739,20 @@ void BigInteger::operator*=(const BigInteger& big_int)
         _nums.push_back(0);
         return;
     }
-    std::list<char> temp_nums_mul, temp_nums_add, ans_nums;
+    std::vector<char> temp_nums_mul, temp_nums_add, ans_nums;
     char temp_num = 0;
-    std::list<char> * nums_a, * nums_b;
-    std::list<char>::const_reverse_iterator it_a, it_b, end_of_a;
-    std::list<char>::const_iterator it_add, end_of_add, it_mul, end_of_mul;
+    std::vector<char> * nums_a, * nums_b;
+    std::vector<char>::const_reverse_iterator it_a, it_b, end_of_a;
+    std::vector<char>::const_iterator it_add, end_of_add, it_mul, end_of_mul;
     if (_nums.size() < big_int._nums.size())
     {
-        nums_a = const_cast<std::list<char>*>(&(big_int._nums));
-        nums_b = const_cast<std::list<char>*>(&_nums);
+        nums_a = const_cast<std::vector<char>*>(&(big_int._nums));
+        nums_b = const_cast<std::vector<char>*>(&_nums);
     }
     else
     {
-        nums_a = const_cast<std::list<char>*>(&_nums);
-        nums_b = const_cast<std::list<char>*>(&(big_int._nums));
+        nums_a = const_cast<std::vector<char>*>(&_nums);
+        nums_b = const_cast<std::vector<char>*>(&(big_int._nums));
     }
     it_b = nums_b->crbegin();
     end_of_a = nums_a->crend();
@@ -819,8 +807,8 @@ void BigInteger::operator*=(const BigInteger& big_int)
 
 void BigInteger::operator/=(const BigInteger& big_int)
 {
-    BigInteger big_int_a = this->abs(), big_int_b, temp_num, ans('0');
-    const BigInteger abs_of_big_int = big_int.abs(), zero('0'), one('1'), ten("10");
+    BigInteger big_int_a = this->abs(), big_int_b, temp_num, ans(0ll);
+    const BigInteger abs_of_big_int = big_int.abs(), zero(0ll), one(1ll), ten(10ll);
     if (big_int_a < abs_of_big_int || *this == zero)
     {
         _negative = false;
@@ -871,7 +859,7 @@ void BigInteger::operator/=(const BigInteger& big_int)
 
 void BigInteger::operator%=(const BigInteger& big_int)
 {
-    BigInteger big_int_a = this->abs(), big_int_b, zero('0'), one('1'), ten("10"), temp_num;
+    BigInteger big_int_a = this->abs(), big_int_b, zero(0ll), one(1ll), ten(10ll), temp_num;
     const BigInteger abs_of_big_int = big_int.abs();
     if (*this == zero || *this == big_int || big_int == one)
     {
@@ -915,9 +903,9 @@ void BigInteger::operator%=(const BigInteger& big_int)
 
 BigInteger BigInteger::operator++()
 {
-    std::list<char> temp_nums;
+    std::vector<char> temp_nums;
     char temp_num = 0;
-    std::list<char>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
+    std::vector<char>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
     if (_negative && *it_a == 0) // 借位
     {
         temp_nums.push_back(-9);
@@ -958,9 +946,9 @@ BigInteger BigInteger::operator++()
 
 BigInteger BigInteger::operator++(const int)
 {
-    std::list<char> temp_nums;
+    std::vector<char> temp_nums;
     char temp_num = 0;
-    std::list<char>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
+    std::vector<char>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
     if (_negative && *it_a == 0) // 借位
     {
         temp_nums.push_back(-9);
@@ -993,7 +981,6 @@ BigInteger BigInteger::operator++(const int)
     {
         temp_nums.pop_back();
     }
-    // temp_nums.reverse();
     BigInteger temp(*this);
     _nums.assign(temp_nums.crbegin(), temp_nums.crend());
     _negative = _nums.front() < 0;
@@ -1002,9 +989,9 @@ BigInteger BigInteger::operator++(const int)
 
 BigInteger BigInteger::operator--()
 {
-    std::list<char> temp_nums;
+    std::vector<char> temp_nums;
     char temp_num = 0;
-    std::list<char>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
+    std::vector<char>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
     if (!_negative && _nums.size() > 1 && *it_a == 0) // 借位
     {
         temp_nums.push_back(9);
@@ -1045,9 +1032,9 @@ BigInteger BigInteger::operator--()
 
 BigInteger BigInteger::operator--(const int)
 {
-    std::list<char> temp_nums;
+    std::vector<char> temp_nums;
     char temp_num = 0;
-    std::list<char>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
+    std::vector<char>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
     if (!_negative && _nums.size() > 1 && *it_a == 0) // 借位
     {
         temp_nums.push_back(9);
@@ -1080,7 +1067,6 @@ BigInteger BigInteger::operator--(const int)
     {
         temp_nums.pop_back();
     }
-    // temp_nums.reverse();
     BigInteger temp(*this);
     _nums.assign(temp_nums.crbegin(), temp_nums.crend());
     _negative = _nums.front() < 0;
@@ -1091,7 +1077,7 @@ BigInteger BigInteger::operator--(const int)
 
 std::string BigInteger::to_str() const
 {
-    std::list<char> temp;
+    std::vector<char> temp;
     if (_negative)
     {
         temp.push_back('-');
@@ -1114,8 +1100,8 @@ std::string BigInteger::to_str() const
 size_t BigInteger::to_uint() const
 {
     size_t ans = 0, i = 1;
-    std::list<char>::const_reverse_iterator it = _nums.crbegin();
-    const std::list<char>::const_reverse_iterator end = _nums.crend();
+    std::vector<char>::const_reverse_iterator it = _nums.crbegin();
+    const std::vector<char>::const_reverse_iterator end = _nums.crend();
     while (it != end)
     {
         ans += *it++ * i;
@@ -1127,8 +1113,8 @@ size_t BigInteger::to_uint() const
 int BigInteger::to_int() const
 {
     int ans = 0, i = 1;
-    std::list<char>::const_reverse_iterator it = _nums.crbegin();
-    const std::list<char>::const_reverse_iterator end = _nums.crend();
+    std::vector<char>::const_reverse_iterator it = _nums.crbegin();
+    const std::vector<char>::const_reverse_iterator end = _nums.crend();
     while (it != end)
     {
         ans += *it++ * i;
@@ -1144,14 +1130,14 @@ std::ostream& operator<<(std::ostream& o, const BigInteger& big_int)
     if (big_int._negative)
     {
         o << '-';
-        for (const char& ch : big_int._nums)
+        for (const char ch : big_int._nums)
         {
             o << char(48 - ch);
         }
     }
     else
     {
-        for (const char& ch : big_int._nums)
+        for (const char ch : big_int._nums)
         {
             o << char(ch + 48);
         }
@@ -1161,56 +1147,32 @@ std::ostream& operator<<(std::ostream& o, const BigInteger& big_int)
 
 /* --------------------------------------------------------- */
  
-std::list<char>::const_iterator BigInteger::begin() const
+std::vector<char>::const_iterator BigInteger::begin() const
 {
     return _nums.cbegin();
 }
 
-std::list<char>::const_iterator BigInteger::end() const
+std::vector<char>::const_iterator BigInteger::end() const
 {
     return _nums.cend();
 }
 
-std::list<char>::const_reverse_iterator BigInteger::rbegin() const
+std::vector<char>::const_reverse_iterator BigInteger::rbegin() const
 {
     return _nums.crbegin();
 }
         
-std::list<char>::const_reverse_iterator BigInteger::rend() const
+std::vector<char>::const_reverse_iterator BigInteger::rend() const
 {
     return _nums.crend();
 }
 
-const char& BigInteger::operator[](long i) const
+char BigInteger::operator[](const size_t i) const
 {
-    if (i >= 0 && i < _nums.size())
-    {
-        std::list<char>::const_reverse_iterator it = _nums.crbegin();   
-        while (--i >= 0)
-        {
-            ++it; 
-        }
-        return *it;
-    }
-    else
-    {
-        return *_nums.crend();
-    }
+    return _nums[i];
 }
 
-char& BigInteger::operator[](long i)
+char& BigInteger::operator[](const size_t i)
 {
-    if (i >= 0 && i < _nums.size())
-    {
-        std::list<char>::reverse_iterator it = _nums.rbegin();   
-        while (--i >= 0)
-        {
-            ++it; 
-        }
-        return *it;
-    }
-    else
-    {
-        return *_nums.rend();
-    }
+    return _nums[i];
 }

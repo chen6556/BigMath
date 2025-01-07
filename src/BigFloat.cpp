@@ -1,5 +1,6 @@
 #include "BigFloat.hpp"
 
+
 BigFloat::BigFloat(){}
 
 BigFloat::~BigFloat(){}
@@ -168,7 +169,7 @@ BigFloat BigFloat::round(const BigFloat& big_float) const
     return temp;
 }
 
-BigFloat BigFloat::round(const size_t& n) const
+BigFloat BigFloat::round(const size_t n) const
 {
     if (_digits + _float_part.length() <= n)
     {
@@ -185,7 +186,7 @@ BigFloat BigFloat::round(const size_t& n) const
     return temp;
 }
 
-BigFloat BigFloat::round(const BigFloat& big_float, const bool& inplace)
+BigFloat BigFloat::round(const BigFloat& big_float, const bool inplace)
 {
     if (BigInt(_digits + _float_part.length()) <= big_float._int_part)
     {
@@ -218,7 +219,7 @@ BigFloat BigFloat::round(const BigFloat& big_float, const bool& inplace)
     }
 }
 
-BigFloat BigFloat::round(const size_t& n, const bool& inplace)
+BigFloat BigFloat::round(const size_t n, const bool inplace)
 {
     if (_digits + _float_part.length() <= n)
     {
@@ -272,7 +273,7 @@ BigFloat BigFloat::opposite() const
     return -*this;
 }
 
-BigFloat BigFloat::opposite(const bool& inplace)
+BigFloat BigFloat::opposite(const bool inplace)
 {
     if (*this == BigFloat('0'))
     {
@@ -326,7 +327,7 @@ BigFloat BigFloat::pow(const BigFloat& big_float) const
     return temp;
 }
 
-BigFloat BigFloat::pow(const size_t& n) const
+BigFloat BigFloat::pow(const size_t n) const
 {
     if (n == 0)
     {
@@ -396,7 +397,7 @@ BigFloat BigFloat::rad(const BigFloat& big_flaot) const
     }
 }
 
-BigFloat BigFloat::rad(const size_t& n) const
+BigFloat BigFloat::rad(const size_t n) const
 {
     if (*this == BigFloat('0') || *this == BigFloat('1') || *this == BigFloat("-1"))
     {
@@ -790,47 +791,47 @@ size_t BigFloat::length_of_float_part() const
 
 /* --------------------------------------------------------- */
 
-std::list<char>::const_iterator BigFloat::ibegin() const
+std::vector<char>::const_iterator BigFloat::ibegin() const
 {
     return _int_part.begin();
 }
 
-std::list<char>::const_iterator BigFloat::iend() const
+std::vector<char>::const_iterator BigFloat::iend() const
 {
     return _int_part.end();
 }
 
-std::list<char>::const_reverse_iterator BigFloat::irbegin() const
+std::vector<char>::const_reverse_iterator BigFloat::irbegin() const
 {
     return _int_part.rbegin();
 }
 
-std::list<char>::const_reverse_iterator BigFloat::irend() const
+std::vector<char>::const_reverse_iterator BigFloat::irend() const
 {
     return _int_part.rend();
 }
 
-std::list<char>::const_iterator BigFloat::fbegin() const
+std::vector<char>::const_iterator BigFloat::fbegin() const
 {
     return _float_part.begin();
 }
 
-std::list<char>::const_iterator BigFloat::fend() const
+std::vector<char>::const_iterator BigFloat::fend() const
 {
     return _float_part.end();
 }
 
-std::list<char>::const_reverse_iterator BigFloat::frbegin() const
+std::vector<char>::const_reverse_iterator BigFloat::frbegin() const
 {
     return _float_part.rbegin();
 }
 
-std::list<char>::const_reverse_iterator BigFloat::frend() const
+std::vector<char>::const_reverse_iterator BigFloat::frend() const
 {
     return _float_part.rend();
 }
 
-const char& BigFloat::operator[](long i) const
+char BigFloat::operator[](const long long i) const
 {
     if (i >= 0)
     {
@@ -842,7 +843,7 @@ const char& BigFloat::operator[](long i) const
     }  
 }
 
-char& BigFloat::operator[](long i)
+char& BigFloat::operator[](const long long i)
 {
     if (i >= 0)
     {

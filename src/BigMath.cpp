@@ -1,6 +1,7 @@
 #include "BigMath.hpp"
 
-BigFloat sin(const BigFloat& big_float, const size_t& n)
+
+BigFloat sin(const BigFloat& big_float, const size_t n)
 {
     BigFloat temp(big_float);
     if (big_float.abs() > Constant::Duo_Pi_100)
@@ -11,9 +12,9 @@ BigFloat sin(const BigFloat& big_float, const size_t& n)
     }
     temp.accuracy = std::max(n*2+n/2, big_float.accuracy);
     const BigFloat square_of_big_float = temp * temp;
-    BigFloat factorial_of_count('1'), count('1');
+    BigFloat factorial_of_count(1ll), count(1ll);
     bool flag = true;
-    BigFloat ans = temp; 
+    BigFloat ans = temp;
     for (size_t i = 0; i < 10; ++i)
     {
         temp *= square_of_big_float;
@@ -47,7 +48,7 @@ BigFloat sin(const BigFloat& big_float, const size_t& n)
     return ans;
 }
 
-BigFloat cos(const BigFloat& big_float, const size_t& n)
+BigFloat cos(const BigFloat& big_float, const size_t n)
 {
     BigFloat copy_of_big_float(big_float);
     if (big_float.abs() > Constant::Duo_Pi_100)
@@ -60,7 +61,7 @@ BigFloat cos(const BigFloat& big_float, const size_t& n)
     BigFloat temp('1'), factorial_of_count('1'), count('0');
     temp.accuracy = std::max(n*2+n/2, big_float.accuracy);
     bool flag = true;
-    BigFloat ans = temp; 
+    BigFloat ans = temp;
     for (size_t i = 0; i < 10; ++i)
     {
         temp *= square_of_big_float;
@@ -94,7 +95,7 @@ BigFloat cos(const BigFloat& big_float, const size_t& n)
     return ans;
 }
 
-BigFloat tan(const BigFloat& big_float, const size_t& n)
+BigFloat tan(const BigFloat& big_float, const size_t n)
 {
     BigFloat temp(big_float);
     if (big_float.abs() > Constant::Duo_Pi_100)
@@ -115,12 +116,12 @@ BigFloat tan(const BigFloat& big_float, const size_t& n)
 
 BigInt factorial(const BigInt& big_int)
 {
-    if (big_int == BigInt('0'))
+    if (big_int == BigInt(0ll))
     {
-        return BigInt('1');
+        return BigInt(1ll);
     }
     BigInt ans(big_int.abs()), count(big_int.abs());
-    const BigInt two('2');
+    const BigInt two(2ll);
     while (count > two)
     {
         ans *= --count;
@@ -128,11 +129,11 @@ BigInt factorial(const BigInt& big_int)
     return ans;
 }
 
-BigInt factorial(const size_t& n)
+BigInt factorial(const size_t n)
 {
     if (n == 0)
     {
-        return BigInt('1');
+        return BigInt(1ll);
     }
     BigInt ans(n), count(n);
     for (size_t i = 2; i < n; ++i)
@@ -144,12 +145,12 @@ BigInt factorial(const size_t& n)
 
 BigIntF factorial(const BigIntF& big_int)
 {
-    if (big_int == BigIntF('0'))
+    if (big_int == BigIntF(0ll))
     {
-        return BigIntF('1');
+        return BigIntF(1ll);
     }
     BigIntF ans(big_int.abs()), count(big_int.abs());
-    const BigIntF two('2');
+    const BigIntF two(2ll);
     while (count > two)
     {
         ans *= --count;
@@ -159,13 +160,13 @@ BigIntF factorial(const BigIntF& big_int)
 
 /* --------------------------------------------------------- */
 
-BigFloat sqrt(const BigInt& big_int, const size_t& n)
+BigFloat sqrt(const BigInt& big_int, const size_t n)
 {
     BigFloat output;
     output.accuracy = std::max(output.accuracy, n);
     BigInt ans, num_a, num_b;
-    const BigInt twenty("20"), zero('0');
-    std::list<char>::const_iterator it = big_int.begin();
+    const BigInt twenty(20ll), zero(0ll);
+    std::vector<char>::const_iterator it = big_int.begin();
     const size_t end = big_int.length();
     if (end % 2 == 0)
     {
@@ -223,18 +224,18 @@ BigFloat sqrt(const BigInt& big_int, const size_t& n)
             util::append(ans, *num_b.begin());
         }
     }
-    ans %= BigInt("10").pow(ans.length() - output.length_of_int_part());
+    ans %= BigInt(10ll).pow(ans.length() - output.length_of_int_part());
     util::copy_to_float_part(output, ans);
     return output;
 }
 
-BigFloat sqrt(const BigFloat& big_float, const size_t& n)
+BigFloat sqrt(const BigFloat& big_float, const size_t n)
 {
     BigFloat output;
     output.accuracy = std::max(output.accuracy, n);
     BigInt ans, num_a, num_b;
-    const BigInt twenty("20"), zero('0');
-    std::list<char>::const_iterator it = big_float.ibegin();
+    const BigInt twenty(20ll), zero(0ll);
+    std::vector<char>::const_iterator it = big_float.ibegin();
     size_t end = big_float.length_of_int_part();
     if (end % 2 == 0)
     {
@@ -302,7 +303,7 @@ BigFloat sqrt(const BigFloat& big_float, const size_t& n)
             util::append(ans, *num_b.begin());
         }
     }
-    const std::list<char>::const_iterator end_of_float_part = big_float.fend();
+    const std::vector<char>::const_iterator end_of_float_part = big_float.fend();
     for (size_t i = digits % 2; i < end; i += 2)
     {
         util::append(num_a, *it++);
@@ -356,26 +357,26 @@ BigFloat sqrt(const BigFloat& big_float, const size_t& n)
             util::append(ans, *num_b.begin());
         }
     }
-    ans %= BigInt("10").pow(ans.length() - output.length_of_int_part());
+    ans %= BigInt(10ll).pow(ans.length() - output.length_of_int_part());
     util::copy_to_float_part(output, ans);
     return output;
 }
 
-BigFloat pi(const size_t& n)
+BigFloat pi(const size_t n)
 {
     if (n <= 100)
     {
        return n > 20 ? Constant::Pi_100.round(n) : Constant::Pi;
     }
 
-    const BigFloat a = sqrt(BigInt('2'), n) * BigFloat('2') / BigFloat("9801");
-    const BigInt four('4'), b("1103"), c("26390"), d("396");
+    const BigFloat a = sqrt(BigInt(2ll), n) * BigFloat('2') / BigFloat("9801");
+    const BigInt four(4ll), b(1103ll), c(26390ll), d(396ll);
 
     BigFloat temp('0'), temp_a, temp_b;
     temp.accuracy = std::max(temp.accuracy, n);
     temp_a.accuracy = temp.accuracy, temp_b.accuracy = temp.accuracy;
     const BigInt times(n/8+1);
-    for (BigInt k('0'); k < times; ++k)
+    for (BigInt k(0ll); k < times; ++k)
     {
         temp_a = factorial(four * k) * (b + c * k);
         temp_b = factorial(k).pow(4) * d.pow(four * k);
@@ -388,7 +389,7 @@ BigFloat pi(const size_t& n)
     return ans;
 }
 
-BigFloat e(const size_t& n)
+BigFloat e(const size_t n)
 {
     if (n <= 100)
     {

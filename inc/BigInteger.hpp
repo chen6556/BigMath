@@ -1,24 +1,24 @@
 #pragma once
 #include <iostream>
-#include <list>
+#include <string>
+#include <vector>
+
 
 class BigInteger
 {
     private:
-        std::list<char> _nums;
+        std::vector<char> _nums;
         bool _negative = false;
-        BigInteger(const std::list<char>& big_int);
+        BigInteger(const std::vector<char>& big_int);
         size_t to_uint() const;
         int to_int() const;
         
     public:
         BigInteger sqrt() const;
         BigInteger();
-        BigInteger(const char big_int);
         BigInteger(const char* big_int);
         BigInteger(const BigInteger& big_int);
-        BigInteger(size_t n);
-        BigInteger(int n);
+        BigInteger(long long n);
         ~BigInteger();
 
         bool operator>(const BigInteger& big_int) const;
@@ -32,9 +32,9 @@ class BigInteger
         size_t length() const;
         BigInteger abs() const;
         BigInteger opposite() const; 
-        BigInteger opposite(const bool& inplace);
+        BigInteger opposite(const bool inplace);
         BigInteger pow(const BigInteger& big_int) const;
-        BigInteger pow(const size_t& n) const;
+        BigInteger pow(const size_t n) const;
         BigInteger factorial() const;
         friend BigInteger operator-(const BigInteger& big_int);
 
@@ -61,12 +61,12 @@ class BigInteger
         friend class FastBigInteger;
         friend class util;
 
-        std::list<char>::const_iterator begin() const;
-        std::list<char>::const_iterator end() const;
-        std::list<char>::const_reverse_iterator rbegin() const;
-        std::list<char>::const_reverse_iterator rend() const;
-        const char& operator[](long i) const;
-        char& operator[](long i);
+        std::vector<char>::const_iterator begin() const;
+        std::vector<char>::const_iterator end() const;
+        std::vector<char>::const_reverse_iterator rbegin() const;
+        std::vector<char>::const_reverse_iterator rend() const;
+        char operator[](const size_t i) const;
+        char& operator[](const size_t i);
 };
 
 typedef BigInteger BigInt;
