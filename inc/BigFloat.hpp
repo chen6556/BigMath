@@ -52,9 +52,9 @@ class BigFloat
         void operator*=(const BigFloat& big_float);
         void operator/=(const BigFloat& big_float);
 
-        BigFloat operator++();
+        BigFloat& operator++();
         BigFloat operator++(const int);
-        BigFloat operator--();
+        BigFloat& operator--();
         BigFloat operator--(const int);
 
         std::string to_str() const;

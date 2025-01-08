@@ -988,7 +988,7 @@ void FastBigInteger::operator%=(const FastBigInteger& big_int)
     }
 }
 
-FastBigInteger FastBigInteger::operator++()
+FastBigInteger& FastBigInteger::operator++()
 {
     std::vector<int> temp_nums;
     int temp_num = 0;
@@ -1073,7 +1073,7 @@ FastBigInteger FastBigInteger::operator++(const int)
     return temp;
 }
 
-FastBigInteger FastBigInteger::operator--()
+FastBigInteger& FastBigInteger::operator--()
 {
     std::vector<int> temp_nums;
     int temp_num = 0;

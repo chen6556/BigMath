@@ -51,9 +51,9 @@ class BigInteger
         void operator/=(const BigInteger& big_int);
         void operator%=(const BigInteger& big_int);
         
-        BigInteger operator++();
+        BigInteger& operator++();
         BigInteger operator++(const int);
-        BigInteger operator--();
+        BigInteger& operator--();
         BigInteger operator--(const int);
 
         std::string to_str() const;

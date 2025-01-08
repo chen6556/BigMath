@@ -675,7 +675,7 @@ void BigFloat::operator/=(const BigFloat& big_float)
 
 /* --------------------------------------------------------- */
 
-BigFloat BigFloat::operator++()
+BigFloat& BigFloat::operator++()
 {
     if (_negative && _float_part != BigInt('0'))
     {
@@ -704,7 +704,7 @@ BigFloat BigFloat::operator++(const int)
     return temp;
 }
 
-BigFloat BigFloat::operator--()
+BigFloat& BigFloat::operator--()
 {
     if (!_negative && _float_part != BigInt('0'))
     {

@@ -6,7 +6,7 @@
 #include <chrono>
 
 
-int main(int, char**) 
+int main()
 {
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     BigInt a(2025);
@@ -23,4 +23,6 @@ int main(int, char**)
             break;
         }
     }
+
+    return 0;
 }

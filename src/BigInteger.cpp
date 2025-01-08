@@ -901,7 +901,7 @@ void BigInteger::operator%=(const BigInteger& big_int)
     }
 }
 
-BigInteger BigInteger::operator++()
+BigInteger& BigInteger::operator++()
 {
     std::vector<char> temp_nums;
     char temp_num = 0;
@@ -938,7 +938,6 @@ BigInteger BigInteger::operator++()
     {
         temp_nums.pop_back();
     }
-    // temp_nums.reverse();
     _nums.assign(temp_nums.crbegin(), temp_nums.crend());
     _negative = _nums.front() < 0;
     return *this;
@@ -987,7 +986,7 @@ BigInteger BigInteger::operator++(const int)
     return temp;
 }
 
-BigInteger BigInteger::operator--()
+BigInteger& BigInteger::operator--()
 {
     std::vector<char> temp_nums;
     char temp_num = 0;
@@ -1024,7 +1023,6 @@ BigInteger BigInteger::operator--()
     {
         temp_nums.pop_back();
     }
-    // temp_nums.reverse();
     _nums.assign(temp_nums.crbegin(), temp_nums.crend());
     _negative = _nums.front() < 0;
     return *this;

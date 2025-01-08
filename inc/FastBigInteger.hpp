@@ -52,9 +52,9 @@ class FastBigInteger
         void operator/=(const FastBigInteger& big_int);
         void operator%=(const FastBigInteger& big_int);
         
-        FastBigInteger operator++();
+        FastBigInteger& operator++();
         FastBigInteger operator++(const int);
-        FastBigInteger operator--();
+        FastBigInteger& operator--();
         FastBigInteger operator--(const int);
 
         std::string to_str() const;
