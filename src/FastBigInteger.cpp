@@ -144,13 +144,20 @@ FastBigInteger::FastBigInteger(const BigInt& big_int)
 
 FastBigInteger::FastBigInteger(long long n)
 {
-    _negative = n < 0;
-    while (n != 0)
+    if (n == 0)
     {
-        _nums.push_back(n % SN);
-        n /= SN;
+        _nums.push_back(0);
     }
-    std::reverse(_nums.begin(), _nums.end());
+    else
+    {
+        _negative = n < 0;
+        while (n != 0)
+        {
+            _nums.push_back(n % SN);
+            n /= SN;
+        }
+        std::reverse(_nums.begin(), _nums.end());
+    }
 }
 
 FastBigInteger::~FastBigInteger(){}

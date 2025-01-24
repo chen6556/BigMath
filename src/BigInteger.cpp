@@ -57,13 +57,20 @@ BigInteger::BigInteger(const std::vector<char>& big_int)
 
 BigInteger::BigInteger(long long n)
 {
-    _negative = n < 0;
-    while (n != 0)
+    if (n == 0)
     {
-        _nums.push_back(n%10);
-        n /= 10;
+        _nums.push_back(0);
     }
-    std::reverse(_nums.begin(), _nums.end());
+    else
+    {
+        _negative = n < 0;
+        while (n != 0)
+        {
+            _nums.push_back(n%10);
+            n /= 10;
+        }
+        std::reverse(_nums.begin(), _nums.end());
+    }
 }
 
 BigInteger::~BigInteger(){}
