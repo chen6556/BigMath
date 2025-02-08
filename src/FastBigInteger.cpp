@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "FastBigInteger.hpp"
 
 typedef long long ll;

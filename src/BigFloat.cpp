@@ -14,7 +14,7 @@ BigFloat::BigFloat(const char* big_float)
 {
     _negative = *big_float == 45;
     std::string temp(big_float);
-    if (std::find(temp.cbegin(), temp.cend(), '.') != temp.cend())
+    if (temp.find('.') != std::string::npos)
     {
         size_t index = temp.find_first_of('.'), end = temp.length() - 1;
         _int_part = BigInt(temp.substr(0, index).c_str());
