@@ -106,7 +106,7 @@ bool BigInteger::operator>(const BigInteger& big_int) const
         }
         else
         {
-             return false;
+            return false;
         }
     }
 }
@@ -139,7 +139,7 @@ bool BigInteger::operator<(const BigInteger& big_int) const
         }
         else
         {
-             return false;
+            return false;
         }
     }
 }
@@ -208,7 +208,7 @@ bool BigInteger::operator>=(const BigInteger& big_int) const
         }
         else
         {
-             return true;
+            return true;
         }
     }
 }
@@ -241,7 +241,7 @@ bool BigInteger::operator<=(const BigInteger& big_int) const
         }
         else
         {
-             return true;
+            return true;
         }
     }
 }
@@ -440,14 +440,16 @@ BigInteger BigInteger::operator+(const BigInteger& big_int) const
             }
             else // 不用借位
             {
-                temp_nums.push_back((*it_a + *it_b + temp_num) % 10);
-                temp_num = (*(it_a++) + *(it_b++) + temp_num) / 10;
+                const char t = *(it_a++) + *(it_b++) + temp_num;
+                temp_nums.push_back(t % 10);
+                temp_num = t / 10;
             }
         }
         else
         {
-            temp_nums.push_back((*it_a + *it_b + temp_num) % 10);
-            temp_num = (*(it_a++) + *(it_b++) + temp_num) / 10;
+            const char t = *(it_a++) + *(it_b++) + temp_num;
+            temp_nums.push_back(t % 10);
+            temp_num = t / 10;
         }
     }
     while (it_a != end_of_a)
@@ -464,8 +466,9 @@ BigInteger BigInteger::operator+(const BigInteger& big_int) const
         }
         else
         {
-            temp_nums.push_back((*it_a + temp_num) % 10);
-            temp_num = (*(it_a++) + temp_num) / 10;
+            const char t = *(it_a++) + temp_num;
+            temp_nums.push_back(t % 10);
+            temp_num = t / 10;
         }
     }
     if (temp_num != 0)
@@ -525,8 +528,9 @@ BigInteger BigInteger::operator*(const BigInteger& big_int) const
         {
             while (it_a != end_of_a)
             {
-                temp_nums_mul.push_back((*it_a * *it_b + temp_num) % 10);
-                temp_num = (*(it_a++) * *it_b + temp_num) / 10;
+                const char t = *(it_a++) * (*it_b) + temp_num;
+                temp_nums_mul.push_back(t % 10);
+                temp_num = t / 10;
             }
             if (temp_num != 0)
             {
@@ -545,13 +549,15 @@ BigInteger BigInteger::operator*(const BigInteger& big_int) const
         end_of_mul = temp_nums_mul.cend();
         while (it_add != end_of_add)
         {
-            ans_nums.push_back((*it_mul + *it_add + temp_num) % 10);
-            temp_num = (*(it_mul++) + *(it_add++) + temp_num) / 10;
+            const char t = *(it_mul++) + *(it_add++) + temp_num;
+            ans_nums.push_back(t % 10);
+            temp_num = t / 10;
         }
         while (it_mul != end_of_mul)
         {
-            ans_nums.push_back((*it_mul + temp_num) % 10);
-            temp_num = (*(it_mul++) + temp_num) / 10;
+            const char t = *(it_mul++) + temp_num;
+            ans_nums.push_back(t % 10);
+            temp_num = t / 10;
         }
         if (temp_num != 0)
         {
@@ -696,14 +702,16 @@ void BigInteger::operator+=(const BigInteger& big_int)
             }
             else // 不用借位
             {
-                temp_nums.push_back((*it_a + *it_b + temp_num) % 10);
-                temp_num = (*(it_a++) + *(it_b++) + temp_num) / 10;
+                const char t = *(it_a++) + *(it_b++) + temp_num;
+                temp_nums.push_back(t % 10);
+                temp_num = t / 10;
             }
         }
         else
         {
-            temp_nums.push_back((*it_a + *it_b + temp_num) % 10);
-            temp_num = (*(it_a++) + *(it_b++) + temp_num) / 10;
+            const char t = *(it_a++) + *(it_b++) + temp_num;
+            temp_nums.push_back(t % 10);
+            temp_num = t / 10;
         }
     }
     while (it_a != end_of_a)
@@ -720,8 +728,9 @@ void BigInteger::operator+=(const BigInteger& big_int)
         }
         else
         {
-            temp_nums.push_back((*it_a + temp_num) % 10);
-            temp_num = (*(it_a++) + temp_num) / 10;
+            const char t = *(it_a++) + temp_num;
+            temp_nums.push_back(t % 10);
+            temp_num = t / 10;
         }
     }
     if (temp_num != 0)
@@ -732,7 +741,6 @@ void BigInteger::operator+=(const BigInteger& big_int)
     {
         temp_nums.pop_back();
     }
-    // temp_nums.reverse();
     _nums.assign(temp_nums.crbegin(), temp_nums.crend());
     _negative = _nums.front() < 0;
 }
@@ -785,8 +793,9 @@ void BigInteger::operator*=(const BigInteger& big_int)
         {
             while (it_a != end_of_a)
             {
-                temp_nums_mul.push_back((*it_a * *it_b + temp_num) % 10);
-                temp_num = (*(it_a++) * *it_b + temp_num) / 10;
+                const char t = *(it_a++) * (*it_b) + temp_num;
+                temp_nums_mul.push_back(t % 10);
+                temp_num = t / 10;
             }
             if (temp_num != 0)
             {
@@ -805,13 +814,15 @@ void BigInteger::operator*=(const BigInteger& big_int)
         end_of_mul = temp_nums_mul.cend();
         while (it_add != end_of_add)
         {
-            ans_nums.push_back((*it_mul + *it_add + temp_num) % 10);
-            temp_num = (*(it_mul++) + *(it_add++) + temp_num) / 10;
+            const char t = *(it_mul++) + *(it_add++) + temp_num;
+            ans_nums.push_back(t % 10);
+            temp_num = t / 10;
         }
         while (it_mul != end_of_mul)
         {
-            ans_nums.push_back((*it_mul + temp_num) % 10);
-            temp_num = (*(it_mul++) + temp_num) / 10;
+            const char t = *(it_mul++) + temp_num;
+            ans_nums.push_back(t % 10);
+            temp_num = t / 10;
         }
         if (temp_num != 0)
         {
@@ -937,8 +948,9 @@ BigInteger& BigInteger::operator++()
     }
     else // 不用借位
     {
-        temp_nums.push_back((*it_a + 1) % 10);
-        temp_num = (*(it_a++) + 1) / 10;
+        const char t = *(it_a++) + 1;
+        temp_nums.push_back(t % 10);
+        temp_num = t / 10;
     }
     while (it_a != end_of_a)
     {
@@ -949,8 +961,9 @@ BigInteger& BigInteger::operator++()
         }
         else
         {
-            temp_nums.push_back((*it_a + temp_num) % 10);
-            temp_num = (*(it_a++) + temp_num) / 10;
+            const char t = *(it_a++) + temp_num;
+            temp_nums.push_back(t % 10);
+            temp_num = t / 10;
         }
     }
     if (temp_num != 0)
@@ -985,8 +998,9 @@ BigInteger BigInteger::operator++(const int)
     }
     else // 不用借位
     {
-        temp_nums.push_back((*it_a + 1) % 10);
-        temp_num = (*(it_a++) + 1) / 10;
+        const char t = *(it_a++) + 1;
+        temp_nums.push_back(t % 10);
+        temp_num = t / 10;
     }
     while (it_a != end_of_a)
     {
@@ -997,8 +1011,9 @@ BigInteger BigInteger::operator++(const int)
         }
         else
         {
-            temp_nums.push_back((*it_a + temp_num) % 10);
-            temp_num = (*(it_a++) + temp_num) / 10;
+            const char t = *(it_a++) + temp_num;
+            temp_nums.push_back(t % 10);
+            temp_num = t / 10;
         }
     }
     if (temp_num != 0)
@@ -1033,8 +1048,9 @@ BigInteger& BigInteger::operator--()
     }
     else // 不用借位
     {
-        temp_nums.push_back((*it_a - 1) % 10);
-        temp_num = (*(it_a++) - 1) / 10;
+        const char t = *(it_a++) - 1;
+        temp_nums.push_back(t % 10);
+        temp_num = t / 10;
     }
     while (it_a != end_of_a)
     {
@@ -1045,8 +1061,9 @@ BigInteger& BigInteger::operator--()
         }
         else
         {
-            temp_nums.push_back((*it_a + temp_num) % 10);
-            temp_num = (*(it_a++) + temp_num) / 10;
+            const char t = *(it_a++) + temp_num;
+            temp_nums.push_back(t % 10);
+            temp_num = t / 10;
         }
     }
     if (temp_num != 0)
@@ -1081,8 +1098,9 @@ BigInteger BigInteger::operator--(const int)
     }
     else // 不用借位
     {
-        temp_nums.push_back((*it_a - 1) % 10);
-        temp_num = (*(it_a++) - 1) / 10;
+        const char t = *(it_a++) - 1;
+        temp_nums.push_back(t % 10);
+        temp_num = t / 10;
     }
     while (it_a != end_of_a)
     {
@@ -1093,8 +1111,9 @@ BigInteger BigInteger::operator--(const int)
         }
         else
         {
-            temp_nums.push_back((*it_a + temp_num) % 10);
-            temp_num = (*(it_a++) + temp_num) / 10;
+            const char t = *(it_a++) + temp_num;
+            temp_nums.push_back(t % 10);
+            temp_num = t / 10;
         }
     }
     if (temp_num != 0)

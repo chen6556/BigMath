@@ -144,21 +144,6 @@ BigInt factorial(const size_t n)
     return ans;
 }
 
-BigIntF factorial(const BigIntF& big_int)
-{
-    if (big_int == BigIntF(0ll))
-    {
-        return BigIntF(1ll);
-    }
-    BigIntF ans(big_int.abs()), count(big_int.abs());
-    const BigIntF two(2ll);
-    while (count > two)
-    {
-        ans *= --count;
-    }
-    return ans;
-}
-
 /* --------------------------------------------------------- */
 
 BigFloat sqrt(const BigInt& big_int, const size_t n)

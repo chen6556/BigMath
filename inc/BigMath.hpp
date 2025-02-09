@@ -1,7 +1,6 @@
 #pragma once
 #include "BigFloat.hpp"
 #include "BigInteger.hpp"
-#include "FastBigInteger.hpp"
 #include "Util.hpp"
 #include <thread>
 
@@ -23,7 +22,6 @@ BigFloat tan(const BigFloat& big_float, const size_t n = 10);
 
 BigInt factorial(const BigInt& big_int);
 BigInt factorial(const size_t n);
-BigIntF factorial(const BigIntF& big_int);
 
 BigFloat sqrt(const BigInt& big_int, const size_t n = 20);
 BigFloat sqrt(const BigFloat& big_float, const size_t n = 20);

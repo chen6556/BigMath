@@ -1,5 +1,4 @@
 #include "BigInteger.hpp"
-#include "FastBigInteger.hpp"
 #include "BigFloat.hpp"
 #include "BigMath.hpp"
 #include <iostream>
