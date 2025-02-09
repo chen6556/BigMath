@@ -1008,6 +1008,11 @@ void FastBigInteger::operator%=(const FastBigInteger& big_int)
 
 FastBigInteger& FastBigInteger::operator++()
 {
+    if ((_negative && _nums.back() != 0) || (!_negative && _nums.back() != INT_MAX))
+    {
+        _nums.back()++;
+        return *this;
+    }
     std::vector<int> temp_nums;
     int temp_num = 0;
     std::vector<int>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
@@ -1050,6 +1055,12 @@ FastBigInteger& FastBigInteger::operator++()
 
 FastBigInteger FastBigInteger::operator++(const int)
 {
+    if ((_negative && _nums.back() != 0) || (!_negative && _nums.back() != INT_MAX))
+    {
+        FastBigInteger temp(*this);
+        temp._nums.back()++;
+        return temp;
+    }
     std::vector<int> temp_nums;
     int temp_num = 0;
     std::vector<int>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
@@ -1093,6 +1104,11 @@ FastBigInteger FastBigInteger::operator++(const int)
 
 FastBigInteger& FastBigInteger::operator--()
 {
+    if ((_negative && _nums.back() != -INT_MAX) || (!_negative && _nums.back() != 0))
+    {
+        _nums.back()--;
+        return *this;
+    }
     std::vector<int> temp_nums;
     int temp_num = 0;
     std::vector<int>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
@@ -1135,6 +1151,12 @@ FastBigInteger& FastBigInteger::operator--()
 
 FastBigInteger FastBigInteger::operator--(const int)
 {
+    if ((_negative && _nums.back() != -INT_MAX) || (!_negative && _nums.back() != 0))
+    {
+        FastBigInteger temp(*this);
+        temp._nums.back()--;
+        return temp;
+    }
     std::vector<int> temp_nums;
     int temp_num = 0;
     std::vector<int>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();

@@ -263,7 +263,7 @@ BigInteger BigInteger::abs() const
     if (_negative)
     {
         std::vector<char> temp;
-        for (const char& ch : _nums)
+        for (const char ch : _nums)
         {
             temp.push_back(-ch);
         }
@@ -409,7 +409,7 @@ BigInteger BigInteger::operator+(const BigInteger& big_int) const
     std::vector<char>::const_reverse_iterator it_a, it_b, end_of_a;
     bool negative_a, negative_b;
     
-    if (this->abs() < big_int.abs())
+    if (_nums.size() < big_int._nums.size() || this->abs() < big_int.abs())
     {
         nums_a = const_cast<std::vector<char>*>(&(big_int._nums));
         nums_b = const_cast<std::vector<char>*>(&_nums);
@@ -665,7 +665,7 @@ void BigInteger::operator+=(const BigInteger& big_int)
     std::vector<char> * nums_a, * nums_b;
     std::vector<char>::const_reverse_iterator it_a, it_b, end_of_a;
     bool negative_a, negative_b;
-    if (this->abs() < big_int.abs())
+    if (_nums.size() < big_int._nums.size() || this->abs() < big_int.abs())
     {
         nums_a = const_cast<std::vector<char>*>(&(big_int._nums));
         nums_b = const_cast<std::vector<char>*>(&_nums);
@@ -921,6 +921,11 @@ void BigInteger::operator%=(const BigInteger& big_int)
 
 BigInteger& BigInteger::operator++()
 {
+    if ((_negative && _nums.back() != 0) || (!_negative && _nums.back() != 9))
+    {
+        _nums.back()++;
+        return *this;
+    }
     std::vector<char> temp_nums;
     char temp_num = 0;
     std::vector<char>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
@@ -963,6 +968,12 @@ BigInteger& BigInteger::operator++()
 
 BigInteger BigInteger::operator++(const int)
 {
+    if ((_negative && _nums.back() != 0) || (!_negative && _nums.back() != 9))
+    {
+        BigInteger temp(*this);
+        temp._nums.back()++;
+        return temp;
+    }
     std::vector<char> temp_nums;
     char temp_num = 0;
     std::vector<char>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
@@ -1006,6 +1017,11 @@ BigInteger BigInteger::operator++(const int)
 
 BigInteger& BigInteger::operator--()
 {
+    if ((_negative && _nums.back() != -9) || (!_negative && _nums.back() != 0))
+    {
+        _nums.back()--;
+        return *this;
+    }
     std::vector<char> temp_nums;
     char temp_num = 0;
     std::vector<char>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
@@ -1024,7 +1040,7 @@ BigInteger& BigInteger::operator--()
     {
         if (!_negative && *it_a + temp_num < 0)
         {
-             temp_nums.push_back(((*it_a + temp_num) % 10 + 10) % 10);
+            temp_nums.push_back(((*it_a + temp_num) % 10 + 10) % 10);
             temp_num = (temp_num - *(it_a++) - 10) / 10;
         }
         else
@@ -1048,6 +1064,12 @@ BigInteger& BigInteger::operator--()
 
 BigInteger BigInteger::operator--(const int)
 {
+    if ((_negative && _nums.back() != -9) || (!_negative && _nums.back() != 0))
+    {
+        BigInteger temp(*this);
+        temp._nums.back()--;
+        return temp;
+    }
     std::vector<char> temp_nums;
     char temp_num = 0;
     std::vector<char>::const_reverse_iterator it_a = _nums.crbegin(), end_of_a = _nums.crend();
@@ -1097,14 +1119,14 @@ std::string BigInteger::to_str() const
     if (_negative)
     {
         temp.push_back('-');
-        for (const char& ch : _nums)
+        for (const char ch : _nums)
         {
             temp.push_back(48 - ch);
         }
     }
     else
     {
-        for (const char& ch : _nums)
+        for (const char ch : _nums)
         {
             temp.push_back(ch + 48);
         }
