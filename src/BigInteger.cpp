@@ -493,6 +493,7 @@ BigInteger BigInteger::operator*(const BigInteger& big_int) const
         return zero;
     }
     std::vector<char> temp_nums_mul, temp_nums_add, ans_nums;
+    std::vector<char> temp_nums_muls[10];
     char temp_num = 0;
     std::vector<char> * nums_a, * nums_b;
     std::vector<char>::const_reverse_iterator it_a, it_b, end_of_a;
@@ -518,21 +519,25 @@ BigInteger BigInteger::operator*(const BigInteger& big_int) const
         }
         it_a = nums_a->crbegin();
         temp_nums_add.assign(ans_nums.cbegin(), ans_nums.cend());
-        temp_nums_mul.clear();
         ans_nums.clear();
-        for (size_t j = 0; j < i; ++j)
+        temp_nums_mul.assign(i, 0);
+        if (temp_nums_muls[*it_b].empty())
         {
-            temp_nums_mul.push_back(0);
+            while (it_a != end_of_a)
+            {
+                temp_nums_mul.push_back((*it_a * *it_b + temp_num) % 10);
+                temp_num = (*(it_a++) * *it_b + temp_num) / 10;
+            }
+            if (temp_num != 0)
+            {
+                temp_nums_mul.push_back(temp_num);
+                temp_num = 0;
+            }
+            temp_nums_muls[*it_b].assign(temp_nums_mul.cbegin() + i, temp_nums_mul.cend());
         }
-        while (it_a != end_of_a)
+        else
         {
-            temp_nums_mul.push_back((*it_a * *it_b + temp_num) % 10);
-            temp_num = (*(it_a++) * *it_b + temp_num) / 10;
-        }
-        if (temp_num != 0)
-        {
-            temp_nums_mul.push_back(temp_num);
-            temp_num = 0;
+            temp_nums_mul.insert(temp_nums_mul.end(), temp_nums_muls[*it_b].cbegin(), temp_nums_muls[*it_b].cend());
         }
         it_add = temp_nums_add.cbegin();
         end_of_add = temp_nums_add.cend();
@@ -748,6 +753,7 @@ void BigInteger::operator*=(const BigInteger& big_int)
         return;
     }
     std::vector<char> temp_nums_mul, temp_nums_add, ans_nums;
+    std::vector<char> temp_nums_muls[10];
     char temp_num = 0;
     std::vector<char> * nums_a, * nums_b;
     std::vector<char>::const_reverse_iterator it_a, it_b, end_of_a;
@@ -773,21 +779,25 @@ void BigInteger::operator*=(const BigInteger& big_int)
         }
         it_a = nums_a->crbegin();
         temp_nums_add.assign(ans_nums.cbegin(), ans_nums.cend());
-        temp_nums_mul.clear();
         ans_nums.clear();
-        for (size_t j = 0; j < i; ++j)
+        temp_nums_mul.assign(i, 0);
+        if (temp_nums_muls[*it_b].empty())
         {
-            temp_nums_mul.push_back(0);
+            while (it_a != end_of_a)
+            {
+                temp_nums_mul.push_back((*it_a * *it_b + temp_num) % 10);
+                temp_num = (*(it_a++) * *it_b + temp_num) / 10;
+            }
+            if (temp_num != 0)
+            {
+                temp_nums_mul.push_back(temp_num);
+                temp_num = 0;
+            }
+            temp_nums_muls[*it_b].assign(temp_nums_mul.cbegin() + i, temp_nums_mul.cend());
         }
-        while (it_a != end_of_a)
+        else
         {
-            temp_nums_mul.push_back((*it_a * *it_b + temp_num) % 10);
-            temp_num = (*(it_a++) * *it_b + temp_num) / 10;
-        }
-        if (temp_num != 0)
-        {
-            temp_nums_mul.push_back(temp_num);
-            temp_num = 0;
+            temp_nums_mul.insert(temp_nums_mul.end(), temp_nums_muls[*it_b].cbegin(), temp_nums_muls[*it_b].cend());
         }
         it_add = temp_nums_add.cbegin();
         end_of_add = temp_nums_add.cend();
