@@ -553,17 +553,21 @@ BigInteger BigInteger::operator*(const BigInteger& big_int) const
             ans_nums.push_back(t % 10);
             temp_num = t / 10;
         }
-        while (it_mul != end_of_mul)
+        while (temp_num != 0 && it_mul != end_of_mul)
         {
             const char t = *(it_mul++) + temp_num;
             ans_nums.push_back(t % 10);
             temp_num = t / 10;
         }
-        if (temp_num != 0)
+        if (temp_num == 0)
+        {
+            ans_nums.insert(ans_nums.end(), it_mul, end_of_mul);
+        }
+        else
         {
             ans_nums.push_back(temp_num);
             temp_num = 0;
-        }        
+        }
     }
     std::reverse(ans_nums.begin(), ans_nums.end());
     return BigInteger(ans_nums);
@@ -818,17 +822,21 @@ void BigInteger::operator*=(const BigInteger& big_int)
             ans_nums.push_back(t % 10);
             temp_num = t / 10;
         }
-        while (it_mul != end_of_mul)
+        while (temp_num != 0 && it_mul != end_of_mul)
         {
             const char t = *(it_mul++) + temp_num;
             ans_nums.push_back(t % 10);
             temp_num = t / 10;
         }
-        if (temp_num != 0)
+        if (temp_num == 0)
+        {
+            ans_nums.insert(ans_nums.end(), it_mul, end_of_mul);
+        }
+        else
         {
             ans_nums.push_back(temp_num);
             temp_num = 0;
-        }        
+        }
     }
     _nums.assign(ans_nums.crbegin(), ans_nums.crend());
     _negative = _nums.front() < 0;
