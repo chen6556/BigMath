@@ -495,82 +495,110 @@ BigInteger BigInteger::operator*(const BigInteger& big_int) const
     {
         return zero;
     }
-    std::vector<char> temp_nums_mul, temp_nums_add, ans_nums;
-    std::vector<char> temp_nums_muls[10];
-    char temp_num = 0;
-    std::vector<char> * nums_a, * nums_b;
-    std::vector<char>::const_reverse_iterator it_a, it_b, end_of_a;
-    std::vector<char>::const_iterator it_add, end_of_add, it_mul, end_of_mul;
-    if (_nums.size() < big_int._nums.size())
+    const size_t length0 = _nums.size(), length1 = big_int._nums.size();
+    const size_t m = std::min(length0, length1) / 2;
+    if (m < 64)
     {
-        nums_a = const_cast<std::vector<char>*>(&(big_int._nums));
-        nums_b = const_cast<std::vector<char>*>(&_nums);
+        std::vector<char> temp_nums_mul, temp_nums_add, ans_nums;
+        std::vector<char> temp_nums_muls[10];
+        char temp_num = 0;
+        std::vector<char> * nums_a, * nums_b;
+        std::vector<char>::const_reverse_iterator it_a, it_b, end_of_a;
+        std::vector<char>::const_iterator it_add, end_of_add, it_mul, end_of_mul;
+        if (_nums.size() < big_int._nums.size())
+        {
+            nums_a = const_cast<std::vector<char>*>(&(big_int._nums));
+            nums_b = const_cast<std::vector<char>*>(&_nums);
+        }
+        else
+        {
+            nums_a = const_cast<std::vector<char>*>(&_nums);
+            nums_b = const_cast<std::vector<char>*>(&(big_int._nums));
+        }
+        it_b = nums_b->crbegin();
+        end_of_a = nums_a->crend();
+        for (size_t i = 0, end = nums_b->size(); i < end; ++i, ++it_b)
+        {
+            if (*it_b == 0)
+            {
+                temp_num = 0;
+                continue;
+            }
+            it_a = nums_a->crbegin();
+            temp_nums_add.assign(ans_nums.cbegin(), ans_nums.cend());
+            ans_nums.clear();
+            temp_nums_mul.assign(i, 0);
+            if (temp_nums_muls[*it_b].empty())
+            {
+                while (it_a != end_of_a)
+                {
+                    const char t = *(it_a++) * (*it_b) + temp_num;
+                    temp_nums_mul.push_back(t % 10);
+                    temp_num = t / 10;
+                }
+                if (temp_num != 0)
+                {
+                    temp_nums_mul.push_back(temp_num);
+                    temp_num = 0;
+                }
+                temp_nums_muls[*it_b].assign(temp_nums_mul.cbegin() + i, temp_nums_mul.cend());
+            }
+            else
+            {
+                temp_nums_mul.insert(temp_nums_mul.end(), temp_nums_muls[*it_b].cbegin(), temp_nums_muls[*it_b].cend());
+            }
+            it_add = temp_nums_add.cbegin();
+            end_of_add = temp_nums_add.cend();
+            it_mul = temp_nums_mul.cbegin();
+            end_of_mul = temp_nums_mul.cend();
+            while (it_add != end_of_add)
+            {
+                const char t = *(it_mul++) + *(it_add++) + temp_num;
+                ans_nums.push_back(t % 10);
+                temp_num = t / 10;
+            }
+            while (temp_num != 0 && it_mul != end_of_mul)
+            {
+                const char t = *(it_mul++) + temp_num;
+                ans_nums.push_back(t % 10);
+                temp_num = t / 10;
+            }
+            if (temp_num == 0)
+            {
+                ans_nums.insert(ans_nums.end(), it_mul, end_of_mul);
+            }
+            else
+            {
+                ans_nums.push_back(temp_num);
+                temp_num = 0;
+            }
+        }
+        std::reverse(ans_nums.begin(), ans_nums.end());
+        return BigInteger(ans_nums);
     }
     else
     {
-        nums_a = const_cast<std::vector<char>*>(&_nums);
-        nums_b = const_cast<std::vector<char>*>(&(big_int._nums));
-    }
-    it_b = nums_b->crbegin();
-    end_of_a = nums_a->crend();
-    for (size_t i = 0, end = nums_b->size(); i < end; ++i, ++it_b)
-    {
-        if (*it_b == 0)
+        BigInteger a, b, c, d;
+        if (length0 >= length1)
         {
-            temp_num = 0;
-            continue;
-        }
-        it_a = nums_a->crbegin();
-        temp_nums_add.assign(ans_nums.cbegin(), ans_nums.cend());
-        ans_nums.clear();
-        temp_nums_mul.assign(i, 0);
-        if (temp_nums_muls[*it_b].empty())
-        {
-            while (it_a != end_of_a)
-            {
-                const char t = *(it_a++) * (*it_b) + temp_num;
-                temp_nums_mul.push_back(t % 10);
-                temp_num = t / 10;
-            }
-            if (temp_num != 0)
-            {
-                temp_nums_mul.push_back(temp_num);
-                temp_num = 0;
-            }
-            temp_nums_muls[*it_b].assign(temp_nums_mul.cbegin() + i, temp_nums_mul.cend());
+            a._nums.assign(_nums.begin(), _nums.begin() + m);
+            b._nums.assign(_nums.begin() + m, _nums.end());
+            c._nums.assign(big_int._nums.begin(), big_int._nums.begin() + m);
+            d._nums.assign(big_int._nums.begin() + m, big_int._nums.end());
         }
         else
         {
-            temp_nums_mul.insert(temp_nums_mul.end(), temp_nums_muls[*it_b].cbegin(), temp_nums_muls[*it_b].cend());
+            a._nums.assign(big_int._nums.begin(), big_int._nums.begin() + m);
+            b._nums.assign(big_int._nums.begin() + m, big_int._nums.end());
+            c._nums.assign(_nums.begin(), _nums.begin() + m);
+            d._nums.assign(_nums.begin() + m, _nums.end());
         }
-        it_add = temp_nums_add.cbegin();
-        end_of_add = temp_nums_add.cend();
-        it_mul = temp_nums_mul.cbegin();
-        end_of_mul = temp_nums_mul.cend();
-        while (it_add != end_of_add)
-        {
-            const char t = *(it_mul++) + *(it_add++) + temp_num;
-            ans_nums.push_back(t % 10);
-            temp_num = t / 10;
-        }
-        while (temp_num != 0 && it_mul != end_of_mul)
-        {
-            const char t = *(it_mul++) + temp_num;
-            ans_nums.push_back(t % 10);
-            temp_num = t / 10;
-        }
-        if (temp_num == 0)
-        {
-            ans_nums.insert(ans_nums.end(), it_mul, end_of_mul);
-        }
-        else
-        {
-            ans_nums.push_back(temp_num);
-            temp_num = 0;
-        }
+        BigInteger z0 = a * c, z2 = b * d;
+        BigInteger z1 = (a + b) * (c + d) - z0 - z2;
+        z0._nums.insert(z0._nums.end(), m + m, 0);
+        z1._nums.insert(z1._nums.end(), m, 0);
+        return z0 + (z1 + z2);
     }
-    std::reverse(ans_nums.begin(), ans_nums.end());
-    return BigInteger(ans_nums);
 }
 
 BigInteger BigInteger::operator/(const BigInteger& big_int) const
@@ -764,82 +792,89 @@ void BigInteger::operator*=(const BigInteger& big_int)
         _nums.push_back(0);
         return;
     }
-    std::vector<char> temp_nums_mul, temp_nums_add, ans_nums;
-    std::vector<char> temp_nums_muls[10];
-    char temp_num = 0;
-    std::vector<char> * nums_a, * nums_b;
-    std::vector<char>::const_reverse_iterator it_a, it_b, end_of_a;
-    std::vector<char>::const_iterator it_add, end_of_add, it_mul, end_of_mul;
-    if (_nums.size() < big_int._nums.size())
+    if (std::min(_nums.size(), big_int._nums.size()) < 128)
     {
-        nums_a = const_cast<std::vector<char>*>(&(big_int._nums));
-        nums_b = const_cast<std::vector<char>*>(&_nums);
+        std::vector<char> temp_nums_mul, temp_nums_add, ans_nums;
+        std::vector<char> temp_nums_muls[10];
+        char temp_num = 0;
+        std::vector<char> * nums_a, * nums_b;
+        std::vector<char>::const_reverse_iterator it_a, it_b, end_of_a;
+        std::vector<char>::const_iterator it_add, end_of_add, it_mul, end_of_mul;
+        if (_nums.size() < big_int._nums.size())
+        {
+            nums_a = const_cast<std::vector<char>*>(&(big_int._nums));
+            nums_b = const_cast<std::vector<char>*>(&_nums);
+        }
+        else
+        {
+            nums_a = const_cast<std::vector<char>*>(&_nums);
+            nums_b = const_cast<std::vector<char>*>(&(big_int._nums));
+        }
+        it_b = nums_b->crbegin();
+        end_of_a = nums_a->crend();
+        for (size_t i = 0, end = nums_b->size(); i < end; ++i, ++it_b)
+        {
+            if (*it_b == 0)
+            {
+                temp_num = 0;
+                continue;
+            }
+            it_a = nums_a->crbegin();
+            temp_nums_add.assign(ans_nums.cbegin(), ans_nums.cend());
+            ans_nums.clear();
+            temp_nums_mul.assign(i, 0);
+            if (temp_nums_muls[*it_b].empty())
+            {
+                while (it_a != end_of_a)
+                {
+                    const char t = *(it_a++) * (*it_b) + temp_num;
+                    temp_nums_mul.push_back(t % 10);
+                    temp_num = t / 10;
+                }
+                if (temp_num != 0)
+                {
+                    temp_nums_mul.push_back(temp_num);
+                    temp_num = 0;
+                }
+                temp_nums_muls[*it_b].assign(temp_nums_mul.cbegin() + i, temp_nums_mul.cend());
+            }
+            else
+            {
+                temp_nums_mul.insert(temp_nums_mul.end(), temp_nums_muls[*it_b].cbegin(), temp_nums_muls[*it_b].cend());
+            }
+            it_add = temp_nums_add.cbegin();
+            end_of_add = temp_nums_add.cend();
+            it_mul = temp_nums_mul.cbegin();
+            end_of_mul = temp_nums_mul.cend();
+            while (it_add != end_of_add)
+            {
+                const char t = *(it_mul++) + *(it_add++) + temp_num;
+                ans_nums.push_back(t % 10);
+                temp_num = t / 10;
+            }
+            while (temp_num != 0 && it_mul != end_of_mul)
+            {
+                const char t = *(it_mul++) + temp_num;
+                ans_nums.push_back(t % 10);
+                temp_num = t / 10;
+            }
+            if (temp_num == 0)
+            {
+                ans_nums.insert(ans_nums.end(), it_mul, end_of_mul);
+            }
+            else
+            {
+                ans_nums.push_back(temp_num);
+                temp_num = 0;
+            }
+        }
+        _nums.assign(ans_nums.crbegin(), ans_nums.crend());
+        _negative = _nums.front() < 0;
     }
     else
     {
-        nums_a = const_cast<std::vector<char>*>(&_nums);
-        nums_b = const_cast<std::vector<char>*>(&(big_int._nums));
+        *this = (*this) * big_int;
     }
-    it_b = nums_b->crbegin();
-    end_of_a = nums_a->crend();
-    for (size_t i = 0, end = nums_b->size(); i < end; ++i, ++it_b)
-    {
-        if (*it_b == 0)
-        {
-            temp_num = 0;
-            continue;
-        }
-        it_a = nums_a->crbegin();
-        temp_nums_add.assign(ans_nums.cbegin(), ans_nums.cend());
-        ans_nums.clear();
-        temp_nums_mul.assign(i, 0);
-        if (temp_nums_muls[*it_b].empty())
-        {
-            while (it_a != end_of_a)
-            {
-                const char t = *(it_a++) * (*it_b) + temp_num;
-                temp_nums_mul.push_back(t % 10);
-                temp_num = t / 10;
-            }
-            if (temp_num != 0)
-            {
-                temp_nums_mul.push_back(temp_num);
-                temp_num = 0;
-            }
-            temp_nums_muls[*it_b].assign(temp_nums_mul.cbegin() + i, temp_nums_mul.cend());
-        }
-        else
-        {
-            temp_nums_mul.insert(temp_nums_mul.end(), temp_nums_muls[*it_b].cbegin(), temp_nums_muls[*it_b].cend());
-        }
-        it_add = temp_nums_add.cbegin();
-        end_of_add = temp_nums_add.cend();
-        it_mul = temp_nums_mul.cbegin();
-        end_of_mul = temp_nums_mul.cend();
-        while (it_add != end_of_add)
-        {
-            const char t = *(it_mul++) + *(it_add++) + temp_num;
-            ans_nums.push_back(t % 10);
-            temp_num = t / 10;
-        }
-        while (temp_num != 0 && it_mul != end_of_mul)
-        {
-            const char t = *(it_mul++) + temp_num;
-            ans_nums.push_back(t % 10);
-            temp_num = t / 10;
-        }
-        if (temp_num == 0)
-        {
-            ans_nums.insert(ans_nums.end(), it_mul, end_of_mul);
-        }
-        else
-        {
-            ans_nums.push_back(temp_num);
-            temp_num = 0;
-        }
-    }
-    _nums.assign(ans_nums.crbegin(), ans_nums.crend());
-    _negative = _nums.front() < 0;
 }
 
 void BigInteger::operator/=(const BigInteger& big_int)
