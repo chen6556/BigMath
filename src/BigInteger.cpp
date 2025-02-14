@@ -1246,7 +1246,7 @@ std::string BigInteger::to_str() const
 
 /* --------------------------------------------------------- */
 
-std::ostream& operator<<(std::ostream& o, const BigInteger& big_int)
+std::ostream &operator<<(std::ostream &o, const BigInteger &big_int)
 {
     if (big_int._negative)
     {
@@ -1293,7 +1293,26 @@ char BigInteger::operator[](const size_t i) const
     return _nums[i];
 }
 
-char& BigInteger::operator[](const size_t i)
+char &BigInteger::operator[](const size_t i)
 {
     return _nums[i];
+}
+
+/* --------------------------------------------------------- */
+
+BigInteger &BigInteger::to10n(BigInteger &big_int, size_t n)
+{
+    if (big_int._nums.empty())
+    {
+        big_int._nums.push_back(0);
+    }
+    else if (big_int._nums.size() == 1 && big_int._nums.front() == 0)
+    {
+        return big_int;
+    }
+    else
+    {
+        big_int._nums.insert(big_int._nums.end(), n, 0);
+    }
+    return big_int;
 }

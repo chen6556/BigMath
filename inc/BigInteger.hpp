@@ -67,7 +67,9 @@ public:
     std::vector<char>::const_reverse_iterator rbegin() const;
     std::vector<char>::const_reverse_iterator rend() const;
     char operator[](const size_t i) const;
-    char& operator[](const size_t i);
+    char &operator[](const size_t i);
+
+    static BigInteger &to10n(BigInteger &big_int, size_t n);
 };
 
 typedef BigInteger BigInt;

@@ -73,13 +73,13 @@ bool BigFloat::operator>(const BigFloat &big_float) const
     if (_float_part.length() + _digits <= big_float._float_part.length() + big_float._digits)
     {
         temp = _float_part;
-        temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits - _float_part.length() - _digits, 0);
+        BigInteger::to10n(temp, big_float._float_part.length() + big_float._digits - _float_part.length() - _digits);
         return temp > big_float._float_part;
     }
     else
     {
         temp = big_float._float_part;
-        temp._nums.insert(temp._nums.end(), _float_part.length() + _digits - big_float._float_part.length() - big_float._digits, 0);
+        BigInteger::to10n(temp, _float_part.length() + _digits - big_float._float_part.length() - big_float._digits);
         return _float_part > temp;
     }
 }
@@ -94,13 +94,13 @@ bool BigFloat::operator<(const BigFloat &big_float) const
     if (_float_part.length() + _digits <= big_float._float_part.length() + big_float._digits)
     {
         temp = _float_part;
-        temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits - _float_part.length() - _digits, 0);
+        BigInteger::to10n(temp, big_float._float_part.length() + big_float._digits - _float_part.length() - _digits);
         return temp < big_float._float_part;
     }
     else
     {
         temp = big_float._float_part;
-        temp._nums.insert(temp._nums.end(), _float_part.length() + _digits - big_float._float_part.length() - big_float._digits, 0);
+        BigInteger::to10n(temp, _float_part.length() + _digits - big_float._float_part.length() - big_float._digits);
         return _float_part < temp;
     }
 }
@@ -125,13 +125,13 @@ bool BigFloat::operator>=(const BigFloat &big_float) const
     if (_float_part.length() + _digits <= big_float._float_part.length() + big_float._digits)
     {
         temp = _float_part;
-        temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits - _float_part.length() - _digits, 0);
+        BigInteger::to10n(temp, big_float._float_part.length() + big_float._digits - _float_part.length() - _digits);
         return temp >= big_float._float_part;
     }
     else
     {
         temp = big_float._float_part;
-        temp._nums.insert(temp._nums.end(), _float_part.length() + _digits - big_float._float_part.length() - big_float._digits, 0);
+        BigInteger::to10n(temp, _float_part.length() + _digits - big_float._float_part.length() - big_float._digits);
         return _float_part >= temp;
     }
 }
@@ -146,13 +146,13 @@ bool BigFloat::operator<=(const BigFloat &big_float) const
     if (_float_part.length() + _digits <= big_float._float_part.length() + big_float._digits)
     {
         temp = _float_part;
-        temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits - _float_part.length() - _digits, 0);
+        BigInteger::to10n(temp, big_float._float_part.length() + big_float._digits - _float_part.length() - _digits);
         return temp <= big_float._float_part;
     }
     else
     {
         temp = big_float._float_part;
-        temp._nums.insert(temp._nums.end(), _float_part.length() + _digits - big_float._float_part.length() - big_float._digits, 0);
+        BigInteger::to10n(temp, _float_part.length() + _digits - big_float._float_part.length() - big_float._digits);
         return _float_part <= temp;
     }
 }
@@ -443,13 +443,13 @@ BigFloat BigFloat::operator+(const BigFloat &big_float) const
     if (_float_part.length() + _digits <= big_float._float_part.length() + big_float._digits)
     {
         num_a = _int_part;
-        num_a._nums.insert(num_a._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+        BigInteger::to10n(num_a, big_float._float_part.length() + big_float._digits);
         temp = _float_part;
-        temp._nums.insert(temp._nums.end(), big_float._float_part.length() - _float_part.length() + big_float._digits - _digits, 0);
+        BigInteger::to10n(temp, big_float._float_part.length() - _float_part.length() + big_float._digits - _digits);
         num_a += temp;
 
         num_b = big_float._int_part;
-        num_b._nums.insert(num_b._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+        BigInteger::to10n(num_b, big_float._float_part.length() + big_float._digits);
         num_b += big_float._float_part;
         num_a += num_b;
 
@@ -459,20 +459,20 @@ BigFloat BigFloat::operator+(const BigFloat &big_float) const
             ans._int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - big_float._float_part.length() - big_float._digits);
         }
         temp = ans._int_part;
-        temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+        BigInteger::to10n(temp, big_float._float_part.length() + big_float._digits);
         ans._float_part = num_a - temp;
         ans._digits = big_float._float_part.length() + big_float._digits - ans._float_part.length();
     }
     else
     {
         num_a = _int_part;
-        num_a._nums.insert(num_a._nums.end(), _float_part.length() + _digits, 0);
+        BigInteger::to10n(num_a, _float_part.length() + _digits);
         num_a += _float_part;
 
         num_b = big_float._int_part;
-        num_b._nums.insert(num_b._nums.end(), _float_part.length() + _digits, 0);
+        BigInteger::to10n(num_b, _float_part.length() + _digits);
         temp = big_float._float_part;
-        temp._nums.insert(temp._nums.end(), _float_part.length() - big_float._float_part.length() + _digits - big_float._digits, 0);
+        BigInteger::to10n(temp, _float_part.length() - big_float._float_part.length() + _digits - big_float._digits);
         num_b += temp;
         num_a += num_b;
 
@@ -482,7 +482,7 @@ BigFloat BigFloat::operator+(const BigFloat &big_float) const
             ans._int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - _float_part.length() - _digits);
         }
         temp = ans._int_part;
-        temp._nums.insert(temp._nums.end(), _float_part.length() + _digits, 0);
+        BigInteger::to10n(temp, _float_part.length() + _digits);
         ans._float_part = num_a - temp;
         ans._digits = _float_part.length() + _digits - ans._float_part.length();
     }
@@ -509,17 +509,20 @@ BigFloat BigFloat::operator*(const BigFloat &big_float) const
     BigInt num_a, num_b;
     const BigInt ten(10ll);
     num_a = _int_part;
-    num_a._nums.insert(num_a._nums.end(), _float_part.length() + _digits, 0);
+    BigInteger::to10n(num_a, _float_part.length() + _digits);
     num_a += _float_part;
     num_b = big_float._int_part;
-    num_b._nums.insert(num_b._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+    BigInteger::to10n(num_b, big_float._float_part.length() + big_float._digits);
     num_b += big_float._float_part;
     num_a *= num_b;
 
     ans._int_part._negative = num_a._negative;
-    ans._int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - (big_float._float_part.length() + big_float._digits + _float_part.length() + _digits));
+    if (num_a.length() > big_float._float_part.length() + big_float._digits + _float_part.length() + _digits)
+    {
+        ans._int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - (big_float._float_part.length() + big_float._digits + _float_part.length() + _digits));
+    }
     num_b = ans._int_part;
-    num_b._nums.insert(num_b._nums.end(), big_float._float_part.length() + big_float._digits + _float_part.length() + _digits, 0);
+    BigInteger::to10n(num_b, big_float._float_part.length() + big_float._digits + _float_part.length() + _digits);
     ans._float_part = num_a - num_b;
     ans._digits = ans._float_part == BigInteger::ZERO ? 0 : big_float._float_part.length() + big_float._digits + _float_part.length() + _digits - ans._float_part.length();
     ans._negative = num_a._negative;
@@ -545,13 +548,13 @@ BigFloat BigFloat::operator/(const BigFloat &big_float) const
     BigFloat ans;
     BigInt num_a, num_b;
     num_a = _int_part;
-    num_a._nums.insert(num_a._nums.end(), _float_part.length() + _digits, 0);
+    BigInteger::to10n(num_a, _float_part.length() + _digits);
     num_a += _float_part;
 
     num_b = big_float._int_part;
-    num_b._nums.insert(num_b._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+    BigInteger::to10n(num_b, big_float._float_part.length() + big_float._digits);
     num_b += big_float._float_part;
-    num_a._nums.insert(num_a._nums.end(), acc + acc, 0);
+    BigInteger::to10n(num_a, acc + acc);
     num_a /= num_b;
 
     ans.accuracy = acc;
@@ -565,7 +568,7 @@ BigFloat BigFloat::operator/(const BigFloat &big_float) const
         ans._int_part._nums.push_back(0);
     }
     num_b = ans._int_part;
-    num_b._nums.insert(num_b._nums.end(), len_of_float_part, 0);
+    BigInteger::to10n(num_b, len_of_float_part);
     ans._float_part = num_a - num_b;
     ans._negative = num_a._negative;
     ans._digits = (ans._float_part == BigInteger::ZERO ? 0 : len_of_float_part - ans._float_part.length());
@@ -624,20 +627,20 @@ void BigFloat::operator+=(const BigFloat &big_float)
     if (_float_part.length() + _digits <= big_float._float_part.length() + big_float._digits)
     {
         num_a = _int_part;
-        num_a._nums.insert(num_a._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+        BigInteger::to10n(num_a, big_float._float_part.length() + big_float._digits);
         temp = _float_part;
-        temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits - _float_part.length() - _digits, 0);
+        BigInteger::to10n(temp, big_float._float_part.length() + big_float._digits - _float_part.length() - _digits);
         num_a += temp;
 
         num_b = big_float._int_part;
-        num_b._nums.insert(num_b._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+        BigInteger::to10n(num_b, big_float._float_part.length() + big_float._digits);
         num_b += big_float._float_part;
         num_a += num_b;
 
         _int_part._negative = num_a._negative;
         _int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - (big_float._float_part.length() + big_float._digits));
         temp = _int_part;
-        temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+        BigInteger::to10n(temp, big_float._float_part.length() + big_float._digits);
         _float_part = num_a - temp;
         _digits =  big_float._float_part.length() + big_float._digits - _float_part.length();
     }
@@ -645,19 +648,19 @@ void BigFloat::operator+=(const BigFloat &big_float)
     {
         const size_t len_of_float_part = _float_part.length();
         num_a = _int_part;
-        num_a._nums.insert(num_a._nums.end(), len_of_float_part + _digits, 0);
+        BigInteger::to10n(num_a, len_of_float_part + _digits);
         num_a += _float_part ;
 
         num_b = big_float._int_part;
-        num_b._nums.insert(num_b._nums.end(), len_of_float_part + _digits, 0);
+        BigInteger::to10n(num_b, len_of_float_part + _digits);
         temp = big_float._float_part;
-        temp._nums.insert(temp._nums.end(), len_of_float_part - big_float._float_part.length() + _digits - big_float._digits, 0);
+        BigInteger::to10n(temp, len_of_float_part - big_float._float_part.length() + _digits - big_float._digits);
         num_a += num_b;
 
         _int_part = num_a;
-        _int_part._nums.insert(_int_part._nums.end(), len_of_float_part + _digits, 0);
+        BigInteger::to10n(_int_part, len_of_float_part + _digits);
         temp = _int_part;
-        temp._nums.insert(temp._nums.end(), len_of_float_part + _digits, 0);
+        BigInteger::to10n(temp, len_of_float_part + _digits);
         _float_part = num_a - temp;
         _digits =  len_of_float_part + _digits - _float_part.length();
     }
@@ -683,18 +686,21 @@ void BigFloat::operator*=(const BigFloat &big_float)
     const BigInt ten(10ll);
     const size_t len_of_float_part = _float_part.length();
     num_a = _int_part;
-    num_a._nums.insert(num_a._nums.end(), len_of_float_part + _digits, 0);
+    BigInteger::to10n(num_a, len_of_float_part + _digits);
     num_a += _float_part;
 
     num_b = big_float._int_part;
-    num_b._nums.insert(num_b._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+    BigInteger::to10n(num_b, big_float._float_part.length() + big_float._digits);
     num_b += big_float._float_part;
     num_a *= num_b;
 
     _int_part._negative = num_a._negative;
-    _int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - (big_float._float_part.length() + big_float._digits + len_of_float_part + _digits));
+    if (num_a.length() > big_float._float_part.length() + big_float._digits + len_of_float_part + _digits)
+    {
+        _int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - (big_float._float_part.length() + big_float._digits + len_of_float_part + _digits));
+    }
     temp = _int_part;
-    temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits + len_of_float_part + _digits, 0);
+    BigInteger::to10n(temp, big_float._float_part.length() + big_float._digits + len_of_float_part + _digits);
     _float_part = num_a - temp;
     _digits =  big_float._float_part.length() + big_float._digits + len_of_float_part + _digits - _float_part.length();
     _negative = num_a.negative();
@@ -719,13 +725,13 @@ void BigFloat::operator/=(const BigFloat &big_float)
     BigInt num_a, num_b;
     const BigInt ten(10ll);
     num_a = _int_part;
-    num_a._nums.insert(num_a._nums.end(), _float_part.length() + _digits, 0);
+    BigInteger::to10n(num_a, _float_part.length() + _digits);
     num_a += _float_part;
 
     num_b = big_float._int_part;
-    num_b._nums.insert(num_b._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+    BigInteger::to10n(num_b, big_float._float_part.length() + big_float._digits);
     num_b += big_float._float_part;
-    num_a._nums.insert(num_a._nums.end(), acc + acc, 0);
+    BigInteger::to10n(num_a, acc + acc);
     num_a /= num_b;
 
     accuracy = acc;
@@ -739,7 +745,7 @@ void BigFloat::operator/=(const BigFloat &big_float)
         _int_part._nums.push_back(0);
     }
     num_b = _int_part;
-    num_b._nums.insert(num_b._nums.end(), len_of_float_part, 0);
+    BigInteger::to10n(num_b, len_of_float_part);
     _float_part = num_a - num_b;
     _negative = num_a._negative;
     _digits = _float_part == BigInteger::ZERO ? 0 : len_of_float_part - _float_part.length();
