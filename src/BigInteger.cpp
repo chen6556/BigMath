@@ -280,7 +280,7 @@ BigInteger BigInteger::opposite() const
     return -*this;
 }
 
-BigInteger BigInteger::opposite(const bool inplace)
+BigInteger &BigInteger::opposite(const bool inplace)
 {
     if (*this == BigInteger(0ll))
     {
@@ -603,38 +603,48 @@ BigInteger BigInteger::operator*(const BigInteger& big_int) const
 
 BigInteger BigInteger::operator/(const BigInteger& big_int) const
 {
-    BigInteger big_int_a = this->abs(), big_int_b, temp_num, ans(0ll);
-    const BigInteger abs_of_big_int = big_int.abs(), zero(0ll), one(1ll), ten(10ll);
-    if (big_int_a < abs_of_big_int || *this == zero)
+    BigInteger big_int_a = this->abs(), big_int_b, ans(0ll);
+    const BigInteger abs_of_big_int = big_int.abs();
+    if (big_int_a < abs_of_big_int)
     {
-        return zero;
-    }
-    else if (big_int_a == abs_of_big_int)
-    {
-        return _negative == big_int._negative ? one : -one;
+        return BigInteger(0ll);
     }
     size_t len_a = _nums.size(), len_b = big_int._nums.size();
+    std::vector<char> temp_nums[10];
+    temp_nums[1].assign(abs_of_big_int._nums.begin(), abs_of_big_int._nums.end());
+    big_int_b = abs_of_big_int;
+    for (int i = 2; i < 10; ++i)
+    {
+        big_int_b += big_int_b;
+        temp_nums[i].assign(big_int_b._nums.begin(), big_int_b._nums.end());
+    }
     while (len_a >= len_b && big_int_a >= abs_of_big_int)
     {
-        temp_num = one;
+        int i = 1;
         while (true)
         {
-            big_int_b = abs_of_big_int * temp_num * ten.pow(len_a - len_b);
-            
-            if (len_a > len_b && temp_num == one && big_int_b > big_int_a)
+            big_int_b._nums.assign(temp_nums[i].begin(), temp_nums[i].end());
+            big_int_b._nums.insert(big_int_b._nums.end(), len_a - len_b, 0);
+
+            if (len_a > len_b && i == 1 && big_int_b > big_int_a)
             {
-                --len_a; 
+                --len_a;
                 continue;
             }
             else if (big_int_a < big_int_b)
-            {   
-                big_int_b = abs_of_big_int * --temp_num * ten.pow(len_a - len_b);
+            {
+                --i;
+                big_int_b._nums.assign(temp_nums[i].begin(), temp_nums[i].end());
+                big_int_b._nums.insert(big_int_b._nums.end(), len_a - len_b, 0);
                 break;
             }
-            ++temp_num;
+            ++i;
         }
         big_int_a -= big_int_b;
-        ans += (temp_num * ten.pow(len_a - len_b));
+        big_int_b._nums.clear();
+        big_int_b._nums.push_back(i);
+        big_int_b._nums.insert(big_int_b._nums.end(), len_a - len_b, 0);
+        ans += big_int_b;
         len_a = big_int_a._nums.size();
     }
     if (_negative == big_int._negative)
@@ -649,31 +659,38 @@ BigInteger BigInteger::operator/(const BigInteger& big_int) const
 
 BigInteger BigInteger::operator%(const BigInteger& big_int) const
 {
-    BigInteger big_int_a = this->abs(), big_int_b, temp_num;
-    const BigInteger abs_of_big_int = big_int.abs(), zero(0ll), one(1ll), ten(10ll);
-    if (*this == zero || *this == big_int || big_int == one)
-    {
-        return zero;
-    }
+    BigInteger big_int_a = this->abs(), big_int_b;
+    const BigInteger abs_of_big_int = big_int.abs();
     size_t len_a = _nums.size(), len_b = big_int._nums.size();
+    std::vector<char> temp_nums[10];
+    temp_nums[1].assign(abs_of_big_int._nums.begin(), abs_of_big_int._nums.end());
+    big_int_b = abs_of_big_int;
+    for (int i = 2; i < 10; ++i)
+    {
+        big_int_b += big_int_b;
+        temp_nums[i].assign(big_int_b._nums.begin(), big_int_b._nums.end());
+    }
     while (len_a >= len_b && big_int_a >= abs_of_big_int)
     {
-        temp_num = one;
+        int i = 1;
         while (true)
         {
-            big_int_b = abs_of_big_int * temp_num * ten.pow(len_a - len_b);
-            
-            if (len_a > 1 && len_a > len_b && temp_num == one && big_int_b > big_int_a)
+            big_int_b._nums.assign(temp_nums[i].begin(), temp_nums[i].end());
+            big_int_b._nums.insert(big_int_b._nums.end(), len_a - len_b, 0);
+
+            if (len_a > 1 && len_a > len_b && i == 1 && big_int_b > big_int_a)
             {
                 --len_a; 
                 continue;
             }
             else if (big_int_a < big_int_b)
-            {   
-                big_int_b = abs_of_big_int * --temp_num * ten.pow(len_a - len_b);
+            {
+                --i;
+                big_int_b._nums.assign(temp_nums[i].begin(), temp_nums[i].end());
+                big_int_b._nums.insert(big_int_b._nums.end(), len_a - len_b, 0);
                 break;
             }
-            ++temp_num;
+            ++i;
         }
         big_int_a -= big_int_b;
         len_a = big_int_a._nums.size();
@@ -688,10 +705,11 @@ BigInteger BigInteger::operator%(const BigInteger& big_int) const
     }
 }
 
-void BigInteger::operator=(const BigInteger& big_int)
+BigInteger &BigInteger::operator=(const BigInteger& big_int)
 {
     _negative = big_int._negative;
     _nums.assign(big_int._nums.cbegin(), big_int._nums.cend());
+    return *this;
 }
 
 /* --------------------------------------------------------- */
@@ -879,9 +897,9 @@ void BigInteger::operator*=(const BigInteger& big_int)
 
 void BigInteger::operator/=(const BigInteger& big_int)
 {
-    BigInteger big_int_a = this->abs(), big_int_b, temp_num, ans(0ll);
-    const BigInteger abs_of_big_int = big_int.abs(), zero(0ll), one(1ll), ten(10ll);
-    if (big_int_a < abs_of_big_int || *this == zero)
+    BigInteger big_int_a = this->abs(), big_int_b, ans(0ll);
+    const BigInteger abs_of_big_int = big_int.abs();
+    if (big_int_a < abs_of_big_int)
     {
         _negative = false;
         _nums.clear();
@@ -896,27 +914,41 @@ void BigInteger::operator/=(const BigInteger& big_int)
         return;
     }
     size_t len_a = _nums.size(), len_b = big_int._nums.size();
+    std::vector<char> temp_nums[10];
+    temp_nums[1].assign(abs_of_big_int._nums.begin(), abs_of_big_int._nums.end());
+    big_int_b = abs_of_big_int;
+    for (int i = 2; i < 10; ++i)
+    {
+        big_int_b += big_int_b;
+        temp_nums[i].assign(big_int_b._nums.begin(), big_int_b._nums.end());
+    }
     while (len_a >= len_b && big_int_a >= abs_of_big_int)
     {
-        temp_num = one;
+        int i = 1;
         while (true)
         {
-            big_int_b = abs_of_big_int * temp_num * ten.pow(len_a - len_b);
-            
-            if (len_a > len_b && temp_num == one && big_int_b > big_int_a)
+            big_int_b._nums.assign(temp_nums[i].begin(), temp_nums[i].end());
+            big_int_b._nums.insert(big_int_b._nums.end(), len_a - len_b, 0);
+
+            if (len_a > len_b && i == 1 && big_int_b > big_int_a)
             {
-                --len_a; 
+                --len_a;
                 continue;
             }
             else if (big_int_a < big_int_b)
-            {   
-                big_int_b = abs_of_big_int * --temp_num * ten.pow(len_a - len_b);
+            {
+                --i;
+                big_int_b._nums.assign(temp_nums[i].begin(), temp_nums[i].end());
+                big_int_b._nums.insert(big_int_b._nums.end(), len_a - len_b, 0);
                 break;
             }
-            ++temp_num;
+            ++i;
         }
         big_int_a -= big_int_b;
-        ans += (temp_num * ten.pow(len_a - len_b));
+        big_int_b._nums.clear();
+        big_int_b._nums.push_back(i);
+        big_int_b._nums.insert(big_int_b._nums.end(), len_a - len_b, 0);
+        ans += big_int_b;
         len_a = big_int_a._nums.size();
     }
     if (_negative == big_int._negative)
@@ -931,34 +963,38 @@ void BigInteger::operator/=(const BigInteger& big_int)
 
 void BigInteger::operator%=(const BigInteger& big_int)
 {
-    BigInteger big_int_a = this->abs(), big_int_b, zero(0ll), one(1ll), ten(10ll), temp_num;
+    BigInteger big_int_a = this->abs(), big_int_b;
     const BigInteger abs_of_big_int = big_int.abs();
-    if (*this == zero || *this == big_int || big_int == one)
-    {
-        _negative = false;
-        _nums.clear();
-        _nums.push_back(0);
-        return;
-    }
     size_t len_a = _nums.size(), len_b = big_int._nums.size();
+    std::vector<char> temp_nums[10];
+    temp_nums[1].assign(abs_of_big_int._nums.begin(), abs_of_big_int._nums.end());
+    big_int_b = abs_of_big_int;
+    for (int i = 2; i < 10; ++i)
+    {
+        big_int_b += big_int_b;
+        temp_nums[i].assign(big_int_b._nums.begin(), big_int_b._nums.end());
+    }
     while (len_a >= len_b && big_int_a >= abs_of_big_int)
     {
-        temp_num = one;
+        int i = 1;
         while (true)
         {
-            big_int_b = abs_of_big_int * temp_num * ten.pow(len_a - len_b);
-            
-            if (len_a > 1 && len_a > len_b && temp_num == one && big_int_b > big_int_a)
+            big_int_b._nums.assign(temp_nums[i].begin(), temp_nums[i].end());
+            big_int_b._nums.insert(big_int_b._nums.end(), len_a - len_b, 0);
+
+            if (len_a > 1 && len_a > len_b && i == 1 && big_int_b > big_int_a)
             {
-                --len_a; 
+                --len_a;
                 continue;
             }
             else if (big_int_a < big_int_b)
-            {   
-                big_int_b = abs_of_big_int * --temp_num * ten.pow(len_a - len_b);
+            {
+                --i;
+                big_int_b._nums.assign(temp_nums[i].begin(), temp_nums[i].end());
+                big_int_b._nums.insert(big_int_b._nums.end(), len_a - len_b, 0);
                 break;
             }
-            ++temp_num;
+            ++i;
         }
         big_int_a -= big_int_b;
         len_a = big_int_a._nums.size();
@@ -1195,32 +1231,6 @@ std::string BigInteger::to_str() const
     }
     temp.push_back('\0');
     return std::string(temp.cbegin(), temp.cend());
-}
-
-size_t BigInteger::to_uint() const
-{
-    size_t ans = 0, i = 1;
-    std::vector<char>::const_reverse_iterator it = _nums.crbegin();
-    const std::vector<char>::const_reverse_iterator end = _nums.crend();
-    while (it != end)
-    {
-        ans += *it++ * i;
-        i *= 10;
-    }
-    return ans;
-}
-
-int BigInteger::to_int() const
-{
-    int ans = 0, i = 1;
-    std::vector<char>::const_reverse_iterator it = _nums.crbegin();
-    const std::vector<char>::const_reverse_iterator end = _nums.crend();
-    while (it != end)
-    {
-        ans += *it++ * i;
-        i *= 10;
-    }
-    return ans;
 }
 
 /* --------------------------------------------------------- */
