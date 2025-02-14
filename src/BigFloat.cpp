@@ -1,8 +1,8 @@
 #include "BigFloat.hpp"
 
 
-const BigFloat BigFloat::ZERO = BigInteger::ZERO;
-const BigFloat BigFloat::ONE = BigInteger::ONE;
+const BigFloat BigFloat::ZERO = BigFloat("0");
+const BigFloat BigFloat::ONE = BigFloat("1");
 
 BigFloat::BigFloat(){}
 
