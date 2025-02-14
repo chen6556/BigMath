@@ -8,8 +8,8 @@
 int main()
 {
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-    BigInt a(2025);
-    BigInt b = a.factorial();
+    BigInt a(2025ll);
+    BigInt b = factorial(a);
 
     for (std::vector<char>::const_reverse_iterator it = b.rbegin(), end = b.rend(); it != end; ++it)
     {

@@ -556,7 +556,10 @@ BigFloat BigFloat::operator/(const BigFloat &big_float) const
 
     ans.accuracy = acc;
     ans._int_part._negative = num_a._negative;
-    ans._int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - len_of_float_part);
+    if (num_a.length() > len_of_float_part)
+    {
+        ans._int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - len_of_float_part);
+    }
     if (ans._int_part._nums.empty())
     {
         ans._int_part._nums.push_back(0);
@@ -727,7 +730,10 @@ void BigFloat::operator/=(const BigFloat &big_float)
 
     accuracy = acc;
     _int_part._negative = num_a._negative;
-    _int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - len_of_float_part);
+    if (num_a.length() > len_of_float_part)
+    {
+        _int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - len_of_float_part);
+    }
     if (_int_part._nums.empty())
     {
         _int_part._nums.push_back(0);
@@ -753,7 +759,7 @@ void BigFloat::operator/=(const BigFloat &big_float)
         {
             if (_float_part.length() > _digits + _float_part.length() - accuracy)
             {
-                _float_part._nums.erase(_float_part._nums.end() + (_digits + _float_part.length() - accuracy), _float_part._nums.end());
+                _float_part._nums.erase(_float_part._nums.end() - (_digits + _float_part.length() - accuracy), _float_part._nums.end());
             }
             else
             {

@@ -607,14 +607,16 @@ BigInteger BigInteger::operator/(const BigInteger& big_int) const
         return BigInteger::ZERO;
     }
     size_t len_a = _nums.size(), len_b = big_int._nums.size();
-    std::vector<char> temp_nums[10];
+    std::vector<char> temp_nums[11];
     temp_nums[1].assign(abs_of_big_int._nums.begin(), abs_of_big_int._nums.end());
     big_int_b = abs_of_big_int;
     for (int i = 2; i < 10; ++i)
     {
-        big_int_b += big_int_b;
+        big_int_b += abs_of_big_int;
         temp_nums[i].assign(big_int_b._nums.begin(), big_int_b._nums.end());
     }
+    temp_nums[10].assign(abs_of_big_int._nums.begin(), abs_of_big_int._nums.end());
+    temp_nums[10].push_back(0);
     while (len_a >= len_b && big_int_a >= abs_of_big_int)
     {
         int i = 1;
@@ -664,7 +666,7 @@ BigInteger BigInteger::operator%(const BigInteger& big_int) const
     big_int_b = abs_of_big_int;
     for (int i = 2; i < 10; ++i)
     {
-        big_int_b += big_int_b;
+        big_int_b += abs_of_big_int;
         temp_nums[i].assign(big_int_b._nums.begin(), big_int_b._nums.end());
     }
     while (len_a >= len_b && big_int_a >= abs_of_big_int)
@@ -910,14 +912,16 @@ void BigInteger::operator/=(const BigInteger& big_int)
         return;
     }
     size_t len_a = _nums.size(), len_b = big_int._nums.size();
-    std::vector<char> temp_nums[10];
+    std::vector<char> temp_nums[11];
     temp_nums[1].assign(abs_of_big_int._nums.begin(), abs_of_big_int._nums.end());
     big_int_b = abs_of_big_int;
     for (int i = 2; i < 10; ++i)
     {
-        big_int_b += big_int_b;
+        big_int_b += abs_of_big_int;
         temp_nums[i].assign(big_int_b._nums.begin(), big_int_b._nums.end());
     }
+    temp_nums[10].assign(abs_of_big_int._nums.begin(), abs_of_big_int._nums.end());
+    temp_nums[10].push_back(0);
     while (len_a >= len_b && big_int_a >= abs_of_big_int)
     {
         int i = 1;
@@ -967,7 +971,7 @@ void BigInteger::operator%=(const BigInteger& big_int)
     big_int_b = abs_of_big_int;
     for (int i = 2; i < 10; ++i)
     {
-        big_int_b += big_int_b;
+        big_int_b += abs_of_big_int;
         temp_nums[i].assign(big_int_b._nums.begin(), big_int_b._nums.end());
     }
     while (len_a >= len_b && big_int_a >= abs_of_big_int)
