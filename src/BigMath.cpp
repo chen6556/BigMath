@@ -1,8 +1,10 @@
 #include <cmath>
+#include <thread>
 #include "BigMath.hpp"
+#include "Util.hpp"
 
 
-BigFloat sin(const BigFloat& big_float, const size_t n)
+BigFloat sin(const BigFloat &big_float, const size_t n)
 {
     BigFloat temp(big_float);
     if (big_float.abs() > Constant::Duo_Pi_100)
@@ -49,7 +51,7 @@ BigFloat sin(const BigFloat& big_float, const size_t n)
     return ans;
 }
 
-BigFloat cos(const BigFloat& big_float, const size_t n)
+BigFloat cos(const BigFloat &big_float, const size_t n)
 {
     BigFloat copy_of_big_float(big_float);
     if (big_float.abs() > Constant::Duo_Pi_100)
@@ -96,7 +98,7 @@ BigFloat cos(const BigFloat& big_float, const size_t n)
     return ans;
 }
 
-BigFloat tan(const BigFloat& big_float, const size_t n)
+BigFloat tan(const BigFloat &big_float, const size_t n)
 {
     BigFloat temp(big_float);
     if (big_float.abs() > Constant::Duo_Pi_100)
@@ -115,15 +117,14 @@ BigFloat tan(const BigFloat& big_float, const size_t n)
 
 /* --------------------------------------------------------- */
 
-BigInt factorial(const BigInt& big_int)
+BigInt factorial(const BigInt &big_int)
 {
-    if (big_int == BigInt(0ll))
+    if (big_int == BigInteger::ZERO)
     {
-        return BigInt(1ll);
+        return BigInteger::ONE;
     }
     BigInt ans(big_int.abs()), count(big_int.abs());
-    const BigInt two(2ll);
-    while (count > two)
+    while (count > BigInteger::TWO)
     {
         ans *= --count;
     }
@@ -134,7 +135,7 @@ BigInt factorial(const size_t n)
 {
     if (n == 0)
     {
-        return BigInt(1ll);
+        return BigInteger::ONE;
     }
     BigInt ans(n), count(n);
     for (size_t i = 2; i < n; ++i)
@@ -146,72 +147,72 @@ BigInt factorial(const size_t n)
 
 /* --------------------------------------------------------- */
 
-BigFloat sqrt(const BigInt& big_int, const size_t n)
+BigFloat sqrt(const BigInt &big_int, const size_t n)
 {
     BigFloat output;
     output.accuracy = std::max(output.accuracy, n);
     BigInt ans, num_a, num_b;
-    const BigInt twenty(20ll), zero(0ll);
+    const BigInt twenty(20ll);
     std::vector<char>::const_iterator it = big_int.begin();
     const size_t end = big_int.length();
     if (end % 2 == 0)
     {
-        const char& f = *it;
-        util::append(ans, char(std::sqrt(f * 10 + *++it)));
-        util::append(num_a, f * 10 + *it++ - *ans.begin() * *ans.begin());
+        const char f = *it;
+        Util::append(ans, char(std::sqrt(f * 10 + *++it)));
+        Util::append(num_a, f * 10 + *it++ - *ans.begin() * *ans.begin());
     }
     else
     {
-        util::append(ans, char(std::sqrt(*it)));
-        util::append(num_a, *it++ - *ans.begin() * *ans.begin());
+        Util::append(ans, char(std::sqrt(*it)));
+        Util::append(num_a, *it++ - *ans.begin() * *ans.begin());
     }
     for (size_t i = 2 - end % 2; i < end; i += 2)
     {
-        util::append(num_a, *it++);
-        util::append(num_a, *it++);
-        num_b = zero;
+        Util::append(num_a, *it++);
+        Util::append(num_a, *it++);
+        num_b = BigInteger::ZERO;
         while ((ans * twenty + num_b) * num_b <= num_a)
         {
             ++num_b;
         }
         if (*num_b.begin() == 0)
         {
-            util::append(ans, 0);
+            Util::append(ans, 0);
         }
         else
         {
             --num_b;
             num_a -= (ans * twenty + num_b) * num_b;
-            util::append(ans, *num_b.begin());
+            Util::append(ans, *num_b.begin());
         }
     }
-    util::copy_to_int_part(output, ans);
-    if (num_a == zero)
+    Util::copy_to_int_part(output, ans);
+    if (num_a == BigInteger::ZERO)
     {
         return output;
     }
     for (size_t i = 0; i < n; ++i)
     {
-        util::append(num_a, 0);
-        util::append(num_a, 0);
-        num_b = zero;
+        Util::append(num_a, 0);
+        Util::append(num_a, 0);
+        num_b = BigInteger::ZERO;
         while ((ans * twenty + num_b) * num_b <= num_a)
         {
             ++num_b;
         }
         if (*num_b.begin() == 0)
         {
-            util::append(ans, 0);
+            Util::append(ans, 0);
         }
         else
         {
             --num_b;
             num_a -= (ans * twenty + num_b) * num_b;
-            util::append(ans, *num_b.begin());
+            Util::append(ans, *num_b.begin());
         }
     }
     ans %= BigInt(10ll).pow(ans.length() - output.length_of_int_part());
-    util::copy_to_float_part(output, ans);
+    Util::copy_to_float_part(output, ans);
     return output;
 }
 
@@ -220,42 +221,42 @@ BigFloat sqrt(const BigFloat& big_float, const size_t n)
     BigFloat output;
     output.accuracy = std::max(output.accuracy, n);
     BigInt ans, num_a, num_b;
-    const BigInt twenty(20ll), zero(0ll);
+    const BigInt twenty(20ll);
     std::vector<char>::const_iterator it = big_float.ibegin();
     size_t end = big_float.length_of_int_part();
     if (end % 2 == 0)
     {
-        const char& f = *it;
-        util::append(ans, char(std::sqrt(f * 10 + *++it)));
-        util::append(num_a, f * 10 + *it++ - *ans.begin() * *ans.begin());
+        const char f = *it;
+        Util::append(ans, char(std::sqrt(f * 10 + *++it)));
+        Util::append(num_a, f * 10 + *it++ - *ans.begin() * *ans.begin());
     }
     else
     {
-        util::append(ans, char(std::sqrt(*it)));
-        util::append(num_a, *it++ - *ans.begin() * *ans.begin());
+        Util::append(ans, char(std::sqrt(*it)));
+        Util::append(num_a, *it++ - *ans.begin() * *ans.begin());
     }
     for (size_t i = 2 - end % 2; i < end; i += 2)
     {
-        util::append(num_a, *it++);
-        util::append(num_a, *it++);
-        num_b = zero;
+        Util::append(num_a, *it++);
+        Util::append(num_a, *it++);
+        num_b = BigInteger::ZERO;
         while ((ans * twenty + num_b) * num_b <= num_a)
         {
             ++num_b;
         }
         if (*num_b.begin() == 0)
         {
-            util::append(ans, 0);
+            Util::append(ans, 0);
         }
         else
         {
             --num_b;
             num_a -= (ans * twenty + num_b) * num_b;
-            util::append(ans, *num_b.begin());
+            Util::append(ans, *num_b.begin());
         }
     }
-    util::copy_to_int_part(output, ans);
-    if (num_a == zero && *big_float.fbegin() == 0)
+    Util::copy_to_int_part(output, ans);
+    if (num_a == BigInteger::ZERO && *big_float.fbegin() == 0)
     {
         return output;
     }
@@ -264,87 +265,87 @@ BigFloat sqrt(const BigFloat& big_float, const size_t n)
     const size_t digits = big_float.length() - big_float.length_of_int_part() - big_float.length_of_float_part();
     for (size_t i = 0; i < digits; i += 2)
     {
-        util::append(num_a, 0);
+        Util::append(num_a, 0);
         if (i + 2 <= digits)
         {
-            util::append(num_a, 0);
+            Util::append(num_a, 0);
         }
         else
         {
-            util::append(num_a, *it++);
+            Util::append(num_a, *it++);
         }
-        num_b = zero;
+        num_b = BigInteger::ZERO;
         while ((ans * twenty + num_b) * num_b <= num_a)
         {
             ++num_b;
         }
         if (*num_b.begin() == 0)
         {
-            util::append(ans, 0);
+            Util::append(ans, 0);
         }
         else
         {
             --num_b;
             num_a -= (ans * twenty + num_b) * num_b;
-            util::append(ans, *num_b.begin());
+            Util::append(ans, *num_b.begin());
         }
     }
     const std::vector<char>::const_iterator end_of_float_part = big_float.fend();
     for (size_t i = digits % 2; i < end; i += 2)
     {
-        util::append(num_a, *it++);
+        Util::append(num_a, *it++);
         if (it != end_of_float_part)
         {
-            util::append(num_a, *it++);
+            Util::append(num_a, *it++);
         }
         else
         {
-            util::append(num_a, 0);
+            Util::append(num_a, 0);
         }
-        num_b = zero;
+        num_b = BigInteger::ZERO;
         while ((ans * twenty + num_b) * num_b <= num_a)
         {
             ++num_b;
         }
         if (*num_b.begin() == 0)
         {
-            util::append(ans, 0);
+            Util::append(ans, 0);
         }
         else
         {
             --num_b;
             num_a -= (ans * twenty + num_b) * num_b;
-            util::append(ans, *num_b.begin());
+            Util::append(ans, *num_b.begin());
         }
     }
     if (ans.length() - output.length_of_int_part() >= n)
     {
-        util::copy_to_float_part(output, ans);
+        Util::copy_to_float_part(output, ans);
         return output;
     }
     end = n + output.length_of_int_part() - ans.length() ;
     for (size_t i = 0; i < end; ++i)
     {
-        util::append(num_a, 0);
-        util::append(num_a, 0);
-        num_b = zero;
+        Util::append(num_a, 0);
+        Util::append(num_a, 0);
+        num_b = BigInteger::ZERO;
         while ((ans * twenty + num_b) * num_b <= num_a)
         {
             ++num_b;
         }
         if (*num_b.begin() == 0)
         {
-            util::append(ans, 0);
+            Util::append(ans, 0);
         }
         else
         {
             --num_b;
             num_a -= (ans * twenty + num_b) * num_b;
-            util::append(ans, *num_b.begin());
+            Util::append(ans, *num_b.begin());
         }
     }
     ans %= BigInt(10ll).pow(ans.length() - output.length_of_int_part());
-    util::copy_to_float_part(output, ans);
+    Util::copy_to_float_part(output, ans);
     return output;
 }
 

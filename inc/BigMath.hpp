@@ -1,8 +1,6 @@
 #pragma once
 #include "BigFloat.hpp"
 #include "BigInteger.hpp"
-#include "Util.hpp"
-#include <thread>
 
 
 namespace Constant
@@ -16,15 +14,15 @@ namespace Constant
     static const BigFloat E_100("2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274");
 };
 
-BigFloat sin(const BigFloat& big_float, const size_t n = 10);
-BigFloat cos(const BigFloat& big_float, const size_t n = 10);
-BigFloat tan(const BigFloat& big_float, const size_t n = 10);
+BigFloat sin(const BigFloat &big_float, const size_t n = 10);
+BigFloat cos(const BigFloat &big_float, const size_t n = 10);
+BigFloat tan(const BigFloat &big_float, const size_t n = 10);
 
-BigInt factorial(const BigInt& big_int);
+BigInt factorial(const BigInt &big_int);
 BigInt factorial(const size_t n);
 
-BigFloat sqrt(const BigInt& big_int, const size_t n = 20);
-BigFloat sqrt(const BigFloat& big_float, const size_t n = 20);
+BigFloat sqrt(const BigInt &big_int, const size_t n = 20);
+BigFloat sqrt(const BigFloat &big_float, const size_t n = 20);
 
 BigFloat pi(const size_t n = 20);
 BigFloat e(const size_t n = 20);

@@ -1,16 +1,19 @@
 #include "BigFloat.hpp"
 
 
+const BigFloat BigFloat::ZERO = BigInteger::ZERO;
+const BigFloat BigFloat::ONE = BigInteger::ONE;
+
 BigFloat::BigFloat(){}
 
 BigFloat::~BigFloat(){}
 
 BigFloat::BigFloat(const char big_float)
 {
-    _int_part = BigInt(big_float);
+    _int_part = BigInt(static_cast<long long>(big_float));
 }
 
-BigFloat::BigFloat(const char* big_float)
+BigFloat::BigFloat(const char *big_float)
 {
     _negative = *big_float == 45;
     std::string temp(big_float);
@@ -42,7 +45,7 @@ BigFloat::BigFloat(const char* big_float)
     accuracy = std::max(accuracy, _digits+_float_part.length());
 }
 
-BigFloat::BigFloat(const BigFloat& big_float)
+BigFloat::BigFloat(const BigFloat &big_float)
 {
     _negative = big_float._negative;
     _int_part = big_float._int_part;
@@ -51,7 +54,7 @@ BigFloat::BigFloat(const BigFloat& big_float)
     accuracy = std::max(accuracy, big_float.accuracy);
 }
 
-BigFloat::BigFloat(const BigInt& big_int)
+BigFloat::BigFloat(const BigInt &big_int)
 {
     _negative = big_int.negative();
     _int_part = big_int;
@@ -60,92 +63,96 @@ BigFloat::BigFloat(const BigInt& big_int)
 
 /* --------------------------------------------------------- */
 
-bool BigFloat::operator>(const BigFloat& big_float) const
+bool BigFloat::operator>(const BigFloat &big_float) const
 {
     if (_int_part != big_float._int_part)
     {
         return _int_part > big_float._int_part;
     }
     BigInt temp;
-    const BigInt ten("10");
     if (_float_part.length() + _digits <= big_float._float_part.length() + big_float._digits)
     {
-        temp = _float_part * ten.pow(big_float._float_part.length() + big_float._digits - _float_part.length() - _digits);
+        temp = _float_part;
+        temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits - _float_part.length() - _digits, 0);
         return temp > big_float._float_part;
     }
     else
     {
-        temp = big_float._float_part * ten.pow(_float_part.length() + _digits - big_float._float_part.length() - big_float._digits);
+        temp = big_float._float_part;
+        temp._nums.insert(temp._nums.end(), _float_part.length() + _digits - big_float._float_part.length() - big_float._digits, 0);
         return _float_part > temp;
     }
 }
 
-bool BigFloat::operator<(const BigFloat& big_float) const
+bool BigFloat::operator<(const BigFloat &big_float) const
 {
     if (_int_part != big_float._int_part)
     {
         return _int_part < big_float._int_part;
     }
     BigInt temp;
-    const BigInt ten("10");
     if (_float_part.length() + _digits <= big_float._float_part.length() + big_float._digits)
     {
-        temp = _float_part * ten.pow(big_float._float_part.length() + big_float._digits - _float_part.length() - _digits);
+        temp = _float_part;
+        temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits - _float_part.length() - _digits, 0);
         return temp < big_float._float_part;
     }
     else
-    { 
-        temp = big_float._float_part * ten.pow(_float_part.length() + _digits - big_float._float_part.length() - big_float._digits);
+    {
+        temp = big_float._float_part;
+        temp._nums.insert(temp._nums.end(), _float_part.length() + _digits - big_float._float_part.length() - big_float._digits, 0);
         return _float_part < temp;
     }
 }
 
-bool BigFloat::operator==(const BigFloat& big_float) const
+bool BigFloat::operator==(const BigFloat &big_float) const
 {
     return _digits == big_float._digits && _int_part == big_float._int_part && _float_part == big_float._float_part;
 }
 
-bool BigFloat::operator!=(const BigFloat& big_float) const
+bool BigFloat::operator!=(const BigFloat &big_float) const
 {
     return _digits != big_float._digits || _int_part != big_float._int_part || _float_part != big_float._float_part;
 }
 
-bool BigFloat::operator>=(const BigFloat& big_float) const
+bool BigFloat::operator>=(const BigFloat &big_float) const
 {
     if (_int_part != big_float._int_part)
     {
         return _int_part > big_float._int_part;
     }
     BigInt temp;
-    const BigInt ten("10");
     if (_float_part.length() + _digits <= big_float._float_part.length() + big_float._digits)
     {
-        temp = _float_part * ten.pow(big_float._float_part.length() + big_float._digits - _float_part.length() - _digits);
+        temp = _float_part;
+        temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits - _float_part.length() - _digits, 0);
         return temp >= big_float._float_part;
     }
     else
     {
-        temp = big_float._float_part * ten.pow(_float_part.length() + _digits - big_float._float_part.length() - big_float._digits);
+        temp = big_float._float_part;
+        temp._nums.insert(temp._nums.end(), _float_part.length() + _digits - big_float._float_part.length() - big_float._digits, 0);
         return _float_part >= temp;
     }
 }
 
-bool BigFloat::operator<=(const BigFloat& big_float) const
+bool BigFloat::operator<=(const BigFloat &big_float) const
 {
     if (_int_part != big_float._int_part)
     {
         return _int_part < big_float._int_part;
     }
     BigInt temp;
-    const BigInt ten("10");
     if (_float_part.length() + _digits <= big_float._float_part.length() + big_float._digits)
     {
-        temp = _float_part * ten.pow(big_float._float_part.length() + big_float._digits - _float_part.length() - _digits);
+        temp = _float_part;
+        temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits - _float_part.length() - _digits, 0);
         return temp <= big_float._float_part;
     }
     else
-    { 
-        temp = big_float._float_part * ten.pow(_float_part.length() + _digits - big_float._float_part.length() - big_float._digits);
+    {
+        temp = big_float._float_part;
+        temp._nums.insert(temp._nums.end(), _float_part.length() + _digits - big_float._float_part.length() - big_float._digits, 0);
         return _float_part <= temp;
     }
 }
@@ -157,15 +164,23 @@ bool BigFloat::negative() const
     return _negative;
 }
 
-BigFloat BigFloat::round(const BigFloat& big_float) const
+BigFloat BigFloat::round(const BigInt &big_int) const
 {
-    if (BigInt(_digits + _float_part.length()) <= big_float._int_part)
+    if (_digits + _float_part.length() <= big_int.to_sizet())
     {
         return *this;
     }
     BigFloat temp(*this);
-    temp._float_part /= BigInt("10").pow(BigInt(_digits + _float_part.length()) - big_float._int_part);
-    temp._digits = temp._float_part.length() > 1 ? _digits : 0;
+    if (big_int.to_sizet() <= _digits)
+    {
+        temp._float_part._nums.clear();
+        temp._float_part._nums.push_back(0);
+        temp._digits = 0;
+    }
+    else
+    {
+        temp._float_part._nums.erase(temp._float_part._nums.begin() + (big_int.to_sizet() - _digits), temp._float_part._nums.end());
+    }
     return temp;
 }
 
@@ -176,80 +191,55 @@ BigFloat BigFloat::round(const size_t n) const
         return *this;
     }
     BigFloat temp(*this);
-    const BigInt ten("10"), zero('0');
-    temp._float_part /= ten.pow(_digits + _float_part.length() - n);
-    while (temp._float_part % ten == zero)
+    if (n <= _digits)
     {
-        temp._float_part /= ten;
-    }
-    temp._digits = temp._float_part.length() > 1 ? _digits : 0;
-    return temp;
-}
-
-BigFloat BigFloat::round(const BigFloat& big_float, const bool inplace)
-{
-    if (BigInt(_digits + _float_part.length()) <= big_float._int_part)
-    {
-        return *this;
-    }
-    const BigInt ten("10"), zero('0');
-    if (inplace)
-    {
-        _float_part /= BigInt("10").pow(BigInt(_digits + _float_part.length()) - big_float._int_part);
-        while (_float_part.length() > 1 && _float_part % ten == zero)
-        {
-            _float_part /= ten;
-        }
-        if (_float_part.length() == 1)
-        {
-            _digits = 0;
-        }
-        return *this;
+        temp._float_part._nums.clear();
+        temp._float_part._nums.push_back(0);
+        temp._digits = 0;
     }
     else
     {
-        BigFloat temp(*this);
-        temp._float_part /= ten.pow(BigInt(_digits + _float_part.length()) - big_float._int_part);
-        while (temp._float_part.length() > 1 && temp._float_part % ten == zero)
-        {
-            temp._float_part /= ten;
-        }
-        temp._digits = temp._float_part.length() > 1 ? _digits : 0;
-        return temp;
+        temp._float_part._nums.erase(temp._float_part._nums.begin() + (n - _digits), temp._float_part._nums.end());
     }
+    return temp;
 }
 
-BigFloat BigFloat::round(const size_t n, const bool inplace)
+BigFloat &BigFloat::round(const BigInt &big_int, const bool inplace)
+{
+    if (_digits + _float_part.length() <= big_int.to_sizet())
+    {
+        return *this;
+    }
+    if (big_int.to_sizet() <= _digits)
+    {
+        _float_part._nums.clear();
+        _float_part._nums.push_back(0);
+        _digits = 0;
+    }
+    else
+    {
+        _float_part._nums.erase(_float_part._nums.begin() + (big_int.to_sizet() - _digits), _float_part._nums.end());
+    }
+    return *this;
+}
+
+BigFloat &BigFloat::round(const size_t n, const bool inplace)
 {
     if (_digits + _float_part.length() <= n)
     {
         return *this;
     }
-    const BigInt ten("10"), zero('0');
-    if (inplace)
+    if (n <= _digits)
     {
-        _float_part /= ten.pow(_digits + _float_part.length() - n);
-        while (_float_part.length() > 1 && _float_part % ten == zero)
-        {
-            _float_part /= ten;
-        }
-        if (_float_part.length() == 1)
-        {
-            _digits = 0;
-        }
-        return *this;
+        _float_part._nums.clear();
+        _float_part._nums.push_back(0);
+        _digits = 0;
     }
     else
     {
-        BigFloat temp(*this);
-        temp._float_part /= ten.pow(_digits + _float_part.length() - n);
-        while (temp._float_part.length() > 1 && temp._float_part % ten == zero)
-        {
-            temp._float_part /= ten;
-        }
-        temp._digits = temp._float_part.length() > 1 ? _digits : 0;
-        return temp;
+        _float_part._nums.erase(_float_part._nums.begin() + (n - _digits), _float_part._nums.end());
     }
+    return *this;
 }
 
 BigFloat BigFloat::abs() const
@@ -273,37 +263,29 @@ BigFloat BigFloat::opposite() const
     return -*this;
 }
 
-BigFloat BigFloat::opposite(const bool inplace)
+BigFloat &BigFloat::opposite(const bool inplace)
 {
-    if (*this == BigFloat('0'))
+    if (*this == BigFloat::ZERO)
     {
         return *this;
     }
-    if (inplace)
-    {
-        _negative = !_negative;
-        _int_part.opposite(true);
-        _float_part.opposite(true);
-        return *this;
-    }
-    else
-    {
-        return -*this;
-    }
+    _negative = !_negative;
+    _int_part.opposite(true);
+    _float_part.opposite(true);
+    return *this;
 } 
 
-BigFloat BigFloat::pow(const BigFloat& big_float) const
+BigFloat BigFloat::pow(const BigFloat &big_float) const
 {
-    if (big_float <= BigFloat('0'))
+    if (big_float <= BigFloat::ZERO)
     {
-        return BigFloat('1');
+        return BigFloat::ONE;
     }
     BigFloat temp(*this);
-    BigInt i('1');
-    const BigInt two('2');
+    BigInt i(1ll);
     while (i < big_float._int_part)
     {
-        i *= two;
+        i *= BigInteger::TWO;
         if (i >= big_float._int_part)
         {
             if (i == big_float._int_part)
@@ -312,7 +294,7 @@ BigFloat BigFloat::pow(const BigFloat& big_float) const
             }
             else
             {
-                i /= two;
+                i /= BigInteger::TWO;
             }
             break;
         }
@@ -331,7 +313,7 @@ BigFloat BigFloat::pow(const size_t n) const
 {
     if (n == 0)
     {
-        return BigFloat('1');
+        return BigFloat::ONE;
     }
     BigFloat temp(*this);
     size_t i = 1;
@@ -361,16 +343,25 @@ BigFloat BigFloat::pow(const size_t n) const
     return temp;
 }
 
-BigFloat BigFloat::rad(const BigFloat& big_flaot) const
+BigFloat BigFloat::rad(const BigFloat &big_flaot) const
 {
-    if (*this == BigFloat('0') || *this == BigFloat('1') || *this == BigFloat("-1"))
+    if (*this == BigFloat::ZERO || *this == BigFloat::ONE || *this == BigFloat("-1"))
     {
         return *this;
     }
-    const BigFloat n(big_flaot.abs()), m = n - BigFloat('1'), target = this->abs();
+    const BigFloat n(big_flaot.abs()), m = n - BigFloat::ONE, target = this->abs();
     BigFloat temp = target / n;
     temp.accuracy = accuracy;
-    const BigFloat end = BigFloat("0.1").pow(accuracy);
+    BigFloat end;
+    if (accuracy > 0)
+    {
+        end._float_part._nums.back() = 1;
+        end._digits = accuracy - 1;
+    }
+    else
+    {
+        end = BigFloat::ONE;
+    }
     while ((temp.pow(n) - target).abs() >= end)
     {
         temp -= ((temp.pow(n) - target) / (n * temp.pow(m)));
@@ -379,15 +370,16 @@ BigFloat BigFloat::rad(const BigFloat& big_flaot) const
     {
         if (temp._digits >= accuracy)
         {
-            temp._float_part = BigInt('0');
+            temp._float_part = BigInteger::ZERO;
             temp._digits = 0;
         }
         else
         {
-            temp._float_part /= BigInt("10").pow(accuracy - _digits);
+            temp._float_part._nums.erase(temp._float_part._nums.begin() + (accuracy - _digits),
+                temp._float_part._nums.end());
         }
     }
-    if (_negative && n._int_part % BigInt('2') == BigInt('1'))
+    if (_negative && n._int_part % BigInteger::TWO == BigInteger::ONE)
     {
         return -temp;
     }
@@ -399,16 +391,12 @@ BigFloat BigFloat::rad(const BigFloat& big_flaot) const
 
 BigFloat BigFloat::rad(const size_t n) const
 {
-    if (*this == BigFloat('0') || *this == BigFloat('1') || *this == BigFloat("-1"))
+    if (*this == BigFloat::ZERO || *this == BigFloat::ONE || *this == BigFloat("-1"))
     {
         return *this;
     }
     const size_t m = n - 1;
-    BigInt n_big_int('0');
-    for (size_t i = 0; i < n; ++i)
-    {
-        ++n_big_int;
-    }
+    BigInt n_big_int(m);
     BigFloat temp = this->abs() / n_big_int;
     while ((temp.pow(n) - *this).abs() >= BigFloat("0.1").pow(accuracy))
     {
@@ -418,12 +406,12 @@ BigFloat BigFloat::rad(const size_t n) const
     {
         if (temp._digits >= accuracy)
         {
-            temp._float_part = BigInt('0');
+            temp._float_part = BigInteger::ZERO;
             temp._digits = 0;
         }
         else
         {
-            temp._float_part /= BigInt("10").pow(accuracy - _digits);
+            temp._float_part /= BigInt(10ll).pow(accuracy - _digits);
         }
     }
     if (_negative && n % 2 == 1)
@@ -436,7 +424,7 @@ BigFloat BigFloat::rad(const size_t n) const
     }
 }
 
-BigFloat operator-(const BigFloat& big_float)
+BigFloat operator-(const BigFloat &big_float)
 {
     BigFloat temp;
     temp._int_part = -big_float._int_part;
@@ -448,238 +436,341 @@ BigFloat operator-(const BigFloat& big_float)
 
 /* --------------------------------------------------------- */
 
-BigFloat BigFloat::operator+(const BigFloat& big_float) const
+BigFloat BigFloat::operator+(const BigFloat &big_float) const
 {
     BigFloat ans;
-    BigInt num_a, num_b;
-    const BigInt ten("10"), zero('0');
+    BigInt num_a, num_b, temp;
     if (_float_part.length() + _digits <= big_float._float_part.length() + big_float._digits)
     {
-        num_a = _int_part * ten.pow(big_float._float_part.length() + big_float._digits) +  _float_part * ten.pow(big_float._float_part.length() + big_float._digits - _float_part.length() - _digits);
-        num_b = big_float._int_part * ten.pow(big_float._float_part.length() + big_float._digits) + big_float._float_part;
+        num_a = _int_part;
+        num_a._nums.insert(num_a._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+        temp = _float_part;
+        temp._nums.insert(temp._nums.end(), big_float._float_part.length() - _float_part.length() + big_float._digits - _digits, 0);
+        num_a += temp;
+
+        num_b = big_float._int_part;
+        num_b._nums.insert(num_b._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+        num_b += big_float._float_part;
         num_a += num_b;
-        ans._int_part = num_a / ten.pow(big_float._float_part.length() + big_float._digits);
-        ans._float_part = num_a - ans._int_part * ten.pow(big_float._float_part.length() + big_float._digits);
-        ans._digits =  big_float._float_part.length() + big_float._digits - ans._float_part.length();
+
+        if (num_a.length() > big_float._float_part.length() + big_float._digits)
+        {
+            ans._int_part._negative = num_a._negative;
+            ans._int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - big_float._float_part.length() - big_float._digits);
+        }
+        temp = ans._int_part;
+        temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+        ans._float_part = num_a - temp;
+        ans._digits = big_float._float_part.length() + big_float._digits - ans._float_part.length();
     }
     else
     {
-        num_a = _int_part * ten.pow(_float_part.length() + _digits) + _float_part ;
-        num_b = big_float._int_part * ten.pow(_float_part.length() + _digits) + big_float._float_part * ten.pow(_float_part.length() + _digits - big_float._float_part.length() - big_float._digits);
-        num_a += num_b; 
-        ans._int_part = num_a / ten.pow(_float_part.length() + _digits);
-        ans._float_part = num_a - ans._int_part * ten.pow(_float_part.length() + _digits);
-        ans._digits =  _float_part.length() + _digits - ans._float_part.length();
+        num_a = _int_part;
+        num_a._nums.insert(num_a._nums.end(), _float_part.length() + _digits, 0);
+        num_a += _float_part;
+
+        num_b = big_float._int_part;
+        num_b._nums.insert(num_b._nums.end(), _float_part.length() + _digits, 0);
+        temp = big_float._float_part;
+        temp._nums.insert(temp._nums.end(), _float_part.length() - big_float._float_part.length() + _digits - big_float._digits, 0);
+        num_b += temp;
+        num_a += num_b;
+
+        if (num_a.length() > _float_part.length() + _digits)
+        {
+            ans._int_part._negative = num_a._negative;
+            ans._int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - _float_part.length() - _digits);
+        }
+        temp = ans._int_part;
+        temp._nums.insert(temp._nums.end(), _float_part.length() + _digits, 0);
+        ans._float_part = num_a - temp;
+        ans._digits = _float_part.length() + _digits - ans._float_part.length();
     }
-    ans._negative = num_a.negative();
-    while (ans._float_part.length() > 1 && ans._float_part % ten == zero)
+    ans._negative = num_a._negative;
+    while (!ans._float_part._nums.empty() && ans._float_part._nums.back() == 0)
     {
-        ans._float_part /= ten;
+        ans._float_part._nums.pop_back();
     }
     return ans;
 }
 
-BigFloat BigFloat::operator-(const BigFloat& big_float) const
+BigFloat BigFloat::operator-(const BigFloat &big_float) const
 {
     return *this + (-big_float);
 }
 
-BigFloat BigFloat::operator*(const BigFloat& big_float) const
+BigFloat BigFloat::operator*(const BigFloat &big_float) const
 {
-    const BigFloat float_zero('0');
-    if (*this == float_zero || big_float == float_zero)
+    if (*this == BigFloat::ZERO || big_float == BigFloat::ZERO)
     {
-        return float_zero;
+        return BigFloat::ZERO;
     }
     BigFloat ans;
     BigInt num_a, num_b;
-    const BigInt ten("10"), zero('0');
-    num_a = _int_part * ten.pow(_float_part.length() + _digits) + _float_part;
-    num_b = big_float._int_part * ten.pow(big_float._float_part.length() + big_float._digits) + big_float._float_part;
+    const BigInt ten(10ll);
+    num_a = _int_part;
+    num_a._nums.insert(num_a._nums.end(), _float_part.length() + _digits, 0);
+    num_a += _float_part;
+    num_b = big_float._int_part;
+    num_b._nums.insert(num_b._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+    num_b += big_float._float_part;
     num_a *= num_b;
 
-    ans._int_part = num_a / ten.pow(big_float._float_part.length() + big_float._digits + _float_part.length() + _digits);
-    ans._float_part = num_a - ans._int_part * ten.pow(big_float._float_part.length() + big_float._digits + _float_part.length() + _digits);
-    ans._digits =  ans._float_part == zero ? 0 : big_float._float_part.length() + big_float._digits + _float_part.length() + _digits - ans._float_part.length();
-    ans._negative = num_a.negative();
-    
-    while (ans._float_part.length() > 1 && ans._float_part % ten == zero)
+    ans._int_part._negative = num_a._negative;
+    ans._int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - (big_float._float_part.length() + big_float._digits + _float_part.length() + _digits));
+    num_b = ans._int_part;
+    num_b._nums.insert(num_b._nums.end(), big_float._float_part.length() + big_float._digits + _float_part.length() + _digits, 0);
+    ans._float_part = num_a - num_b;
+    ans._digits = ans._float_part == BigInteger::ZERO ? 0 : big_float._float_part.length() + big_float._digits + _float_part.length() + _digits - ans._float_part.length();
+    ans._negative = num_a._negative;
+    while (!ans._float_part._nums.empty() && ans._float_part._nums.back() == 0)
     {
-        ans._float_part /= ten;
+        ans._float_part._nums.pop_back();
     }
     return ans;
 }
 
-BigFloat BigFloat::operator/(const BigFloat& big_float) const
+BigFloat BigFloat::operator/(const BigFloat &big_float) const
 {
-    if (*this == BigFloat('0'))
+    if (*this == BigFloat::ZERO)
     {
         return *this;
     }
     else if (this->abs() == big_float.abs())
     {
-        return _negative == big_float._negative ? BigFloat('1') : BigFloat("-1");
+        return _negative == big_float._negative ? BigFloat::ONE : BigFloat("-1");
     }
     const size_t acc = std::max(accuracy, big_float.accuracy),
                 len_of_float_part = 2 * acc + _float_part.length() + _digits - big_float._float_part.length() - big_float._digits;
     BigFloat ans;
     BigInt num_a, num_b;
-    const BigInt ten("10"), zero('0');
-    num_a = _int_part * ten.pow(_float_part.length() + _digits) + _float_part;
-    num_b = big_float._int_part * ten.pow(big_float._float_part.length() + big_float._digits) + big_float._float_part;
-    num_a *= ten.pow( 2 * acc);
+    num_a = _int_part;
+    num_a._nums.insert(num_a._nums.end(), _float_part.length() + _digits, 0);
+    num_a += _float_part;
+
+    num_b = big_float._int_part;
+    num_b._nums.insert(num_b._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+    num_b += big_float._float_part;
+    num_a._nums.insert(num_a._nums.end(), acc + acc, 0);
     num_a /= num_b;
+
     ans.accuracy = acc;
-    ans._int_part = num_a / ten.pow(len_of_float_part);
-    ans._float_part = num_a - ans._int_part * ten.pow(len_of_float_part);
-    ans._negative = num_a.negative();
-    ans._digits = (ans._float_part == zero ? 0 : len_of_float_part - ans._float_part.length());
-    while (ans._float_part.length() > 1 && ans._float_part % ten == zero)
+    ans._int_part._negative = num_a._negative;
+    ans._int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - len_of_float_part);
+    if (ans._int_part._nums.empty())
     {
-        ans._float_part /= ten;
+        ans._int_part._nums.push_back(0);
     }
-    
+    num_b = ans._int_part;
+    num_b._nums.insert(num_b._nums.end(), len_of_float_part, 0);
+    ans._float_part = num_a - num_b;
+    ans._negative = num_a._negative;
+    ans._digits = (ans._float_part == BigInteger::ZERO ? 0 : len_of_float_part - ans._float_part.length());
+    while (!ans._float_part._nums.empty() && ans._float_part._nums.back() == 0)
+    {
+        ans._float_part._nums.pop_back();
+    }
+
     if (ans._digits + ans._float_part.length() > ans.accuracy)
     {
         if (ans._digits >= ans.accuracy)
         {
-            ans._float_part = zero;
+            ans._float_part = BigInteger::ZERO;
             ans._digits = 0;
         }
         else
         {
-            ans._float_part /= ten.pow(ans._digits + ans._float_part.length() - ans.accuracy);
+            if (ans._float_part.length() > ans._digits + ans._float_part.length() - ans.accuracy)
+            {
+                ans._float_part._nums.erase(ans._float_part._nums.end() - (ans._digits + ans._float_part.length() - ans.accuracy), ans._float_part._nums.end());
+            }
+            else
+            {
+                ans._float_part._nums.clear();
+                ans._float_part._nums.push_back(0);
+            }
         }
     }
     return ans;
 }
 
-void BigFloat::operator=(const BigFloat& big_float)
+BigFloat &BigFloat::operator=(const BigFloat &big_float)
 {
     _negative = big_float._negative;
     _int_part = big_float._int_part;
     _float_part = big_float._float_part;
     _digits = big_float._digits;
     accuracy = std::max(accuracy, big_float.accuracy);
+    return *this;
 }
 
-void BigFloat::operator=(const BigInt& big_int)
+BigFloat &BigFloat::operator=(const BigInt &big_int)
 {
     _negative = big_int.negative();
     _int_part = big_int;
-    _float_part = BigInt('0');
+    _float_part = BigInteger::ZERO;
     _digits = 0;
+    return *this;
 }
 
 /* --------------------------------------------------------- */
 
-void BigFloat::operator+=(const BigFloat& big_float)
+void BigFloat::operator+=(const BigFloat &big_float)
 {
-    BigInt num_a, num_b;
-    const BigInt ten("10"), zero('0');
+    BigInt num_a, num_b, temp;
     if (_float_part.length() + _digits <= big_float._float_part.length() + big_float._digits)
     {
-        num_a = _int_part * ten.pow(big_float._float_part.length() + big_float._digits) +  _float_part * ten.pow(big_float._float_part.length() + big_float._digits - _float_part.length() - _digits);
-        num_b = big_float._int_part * ten.pow(big_float._float_part.length() + big_float._digits) + big_float._float_part;
+        num_a = _int_part;
+        num_a._nums.insert(num_a._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+        temp = _float_part;
+        temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits - _float_part.length() - _digits, 0);
+        num_a += temp;
+
+        num_b = big_float._int_part;
+        num_b._nums.insert(num_b._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+        num_b += big_float._float_part;
         num_a += num_b;
-        _int_part = num_a / ten.pow(big_float._float_part.length() + big_float._digits);
-        _float_part = num_a - _int_part * ten.pow(big_float._float_part.length() + big_float._digits);
+
+        _int_part._negative = num_a._negative;
+        _int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - (big_float._float_part.length() + big_float._digits));
+        temp = _int_part;
+        temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+        _float_part = num_a - temp;
         _digits =  big_float._float_part.length() + big_float._digits - _float_part.length();
     }
     else
     {
         const size_t len_of_float_part = _float_part.length();
-        num_a = _int_part * ten.pow(len_of_float_part + _digits) + _float_part ;
-        num_b = big_float._int_part * ten.pow(len_of_float_part + _digits) + big_float._float_part * ten.pow(len_of_float_part + _digits - big_float._float_part.length() - big_float._digits);
-        num_a += num_b; 
-        _int_part = num_a / ten.pow(len_of_float_part + _digits);
-        _float_part = num_a - _int_part * ten.pow(len_of_float_part + _digits);
+        num_a = _int_part;
+        num_a._nums.insert(num_a._nums.end(), len_of_float_part + _digits, 0);
+        num_a += _float_part ;
+
+        num_b = big_float._int_part;
+        num_b._nums.insert(num_b._nums.end(), len_of_float_part + _digits, 0);
+        temp = big_float._float_part;
+        temp._nums.insert(temp._nums.end(), len_of_float_part - big_float._float_part.length() + _digits - big_float._digits, 0);
+        num_a += num_b;
+
+        _int_part = num_a;
+        _int_part._nums.insert(_int_part._nums.end(), len_of_float_part + _digits, 0);
+        temp = _int_part;
+        temp._nums.insert(temp._nums.end(), len_of_float_part + _digits, 0);
+        _float_part = num_a - temp;
         _digits =  len_of_float_part + _digits - _float_part.length();
     }
     _negative = num_a.negative();
-    while (_float_part.length() > 1 && _float_part % ten == zero)
+    while (!_float_part._nums.empty() && _float_part._nums.back() == 0)
     {
-        _float_part /= ten;
+        _float_part._nums.pop_back();
     }
 }
 
-void BigFloat::operator-=(const BigFloat& big_float)
+void BigFloat::operator-=(const BigFloat &big_float)
 {
     *this += (-big_float);
 }
 
-void BigFloat::operator*=(const BigFloat& big_float)
+void BigFloat::operator*=(const BigFloat &big_float)
 {
-    const BigFloat float_zero('0');
-    if (*this == float_zero || big_float == float_zero)
+    if (*this == BigFloat::ZERO || big_float == BigFloat::ZERO)
     {
-        *this = float_zero;
+        *this = BigFloat::ZERO;
     }
-    BigInt num_a, num_b;
-    const BigInt ten("10"), zero('0');
+    BigInt num_a, num_b, temp;
+    const BigInt ten(10ll);
     const size_t len_of_float_part = _float_part.length();
-    num_a = _int_part * ten.pow(_float_part.length() + _digits) + _float_part;
-    num_b = big_float._int_part * ten.pow(big_float._float_part.length() + big_float._digits) + big_float._float_part;
+    num_a = _int_part;
+    num_a._nums.insert(num_a._nums.end(), len_of_float_part + _digits, 0);
+    num_a += _float_part;
+
+    num_b = big_float._int_part;
+    num_b._nums.insert(num_b._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+    num_b += big_float._float_part;
     num_a *= num_b;
-    _int_part = num_a / ten.pow(big_float._float_part.length() + big_float._digits + _float_part.length() + _digits);
-    _float_part = num_a - _int_part * ten.pow(big_float._float_part.length() + big_float._digits + _float_part.length() + _digits);
+
+    _int_part._negative = num_a._negative;
+    _int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - (big_float._float_part.length() + big_float._digits + len_of_float_part + _digits));
+    temp = _int_part;
+    temp._nums.insert(temp._nums.end(), big_float._float_part.length() + big_float._digits + len_of_float_part + _digits, 0);
+    _float_part = num_a - temp;
     _digits =  big_float._float_part.length() + big_float._digits + len_of_float_part + _digits - _float_part.length();
     _negative = num_a.negative();
-    while (_float_part.length() > 1 && _float_part % ten == zero)
+    while (!_float_part._nums.empty() && _float_part._nums.back() == 0)
     {
-        _float_part /= ten;
+        _float_part._nums.pop_back();
     }
 }
 
-void BigFloat::operator/=(const BigFloat& big_float)
+void BigFloat::operator/=(const BigFloat &big_float)
 {
-    if (*this == BigFloat('0'))
+    if (*this == BigFloat::ZERO)
     {
         return;
     }
     else if (this->abs() == big_float.abs())
     {
-        *this = _negative == big_float._negative ? BigFloat('1') : BigFloat("-1");
+        *this = _negative == big_float._negative ? BigFloat::ONE : BigFloat("-1");
     }
     const size_t acc = std::max(accuracy, big_float.accuracy),
                 len_of_float_part = 2 * acc + _float_part.length() + _digits - big_float._float_part.length() - big_float._digits;
     BigInt num_a, num_b;
-    const BigInt ten("10"), zero('0');
-    num_a = _int_part * ten.pow(_float_part.length() + _digits) + _float_part;
-    num_b = big_float._int_part * ten.pow(big_float._float_part.length() + big_float._digits) + big_float._float_part;
-    num_a *= ten.pow( 2 * acc);
-    num_a /= num_b;
-    accuracy = acc;
-    _int_part = num_a / ten.pow(len_of_float_part);
-    _float_part = num_a - _int_part * ten.pow(len_of_float_part);
-    _negative = num_a.negative();
-    _digits = _float_part == zero ? 0 : len_of_float_part - _float_part.length();
+    const BigInt ten(10ll);
+    num_a = _int_part;
+    num_a._nums.insert(num_a._nums.end(), _float_part.length() + _digits, 0);
+    num_a += _float_part;
 
-    while (_float_part.length() > 1 && _float_part % ten == zero)
+    num_b = big_float._int_part;
+    num_b._nums.insert(num_b._nums.end(), big_float._float_part.length() + big_float._digits, 0);
+    num_b += big_float._float_part;
+    num_a._nums.insert(num_a._nums.end(), acc + acc, 0);
+    num_a /= num_b;
+
+    accuracy = acc;
+    _int_part._negative = num_a._negative;
+    _int_part._nums.assign(num_a._nums.begin(), num_a._nums.end() - len_of_float_part);
+    if (_int_part._nums.empty())
     {
-        _float_part /= ten;
+        _int_part._nums.push_back(0);
+    }
+    num_b = _int_part;
+    num_b._nums.insert(num_b._nums.end(), len_of_float_part, 0);
+    _float_part = num_a - num_b;
+    _negative = num_a._negative;
+    _digits = _float_part == BigInteger::ZERO ? 0 : len_of_float_part - _float_part.length();
+
+    while (!_float_part._nums.empty() && _float_part._nums.back() == 0)
+    {
+        _float_part._nums.pop_back();
     }
     if (_digits + _float_part.length() > accuracy)
     {
         if (_digits >= accuracy)
         {
-            _float_part = zero;
+            _float_part = BigInteger::ZERO;
             _digits = 0;
         }
         else
         {
-            _float_part /= ten.pow(_digits + _float_part.length() - accuracy);
+            if (_float_part.length() > _digits + _float_part.length() - accuracy)
+            {
+                _float_part._nums.erase(_float_part._nums.end() + (_digits + _float_part.length() - accuracy), _float_part._nums.end());
+            }
+            else
+            {
+                _float_part._nums.clear();
+                _float_part._nums.push_back(0);
+            }
         }
     }
 }
 
 /* --------------------------------------------------------- */
 
-BigFloat& BigFloat::operator++()
+BigFloat &BigFloat::operator++()
 {
-    if (_negative && _float_part != BigInt('0'))
+    if (_negative && _float_part != BigInteger::ZERO)
     {
-        *this += BigFloat('1');
+        *this += BigFloat::ONE;
     }
     else
     {
@@ -692,9 +783,9 @@ BigFloat& BigFloat::operator++()
 BigFloat BigFloat::operator++(const int)
 {
     BigFloat temp(*this);
-    if (_negative && _float_part != BigInt('0'))
+    if (_negative && _float_part != BigInteger::ZERO)
     {
-        *this += BigFloat('1');
+        *this += BigFloat::ONE;
     }
     else
     {
@@ -704,9 +795,9 @@ BigFloat BigFloat::operator++(const int)
     return temp;
 }
 
-BigFloat& BigFloat::operator--()
+BigFloat &BigFloat::operator--()
 {
-    if (!_negative && _float_part != BigInt('0'))
+    if (!_negative && _float_part != BigInteger::ZERO)
     {
         *this += BigFloat("-1");
     }
@@ -721,7 +812,7 @@ BigFloat& BigFloat::operator--()
 BigFloat BigFloat::operator--(const int)
 {
     BigFloat temp(*this);
-    if (!_negative && _float_part != BigInt('0'))
+    if (!_negative && _float_part != BigInteger::ZERO)
     {
         *this += BigFloat("-1");
     }
@@ -737,7 +828,7 @@ BigFloat BigFloat::operator--(const int)
 
 std::string BigFloat::to_str() const
 {
-    if (_negative && _int_part == BigInt('0'))
+    if (_negative && _int_part == BigInteger::ZERO)
     {
         return '-' + _int_part.to_str().substr(0, _int_part.to_str().length()-1) + '.' + _float_part.abs().to_str();
     }
@@ -752,14 +843,14 @@ BigInt BigFloat::to_big_int() const
     return _int_part;
 }
 
-std::ostream& operator<<(std::ostream& o, const BigFloat& big_float)
+std::ostream &operator<<(std::ostream &o, const BigFloat &big_float)
 {
-    if (big_float._negative && big_float._int_part == BigInt('0'))
+    if (big_float._negative && big_float._int_part == BigInteger::ZERO)
     {
         o << '-';
     }
     o << big_float._int_part;
-    if (big_float._float_part.length() == 0 || big_float._float_part == BigInt('0'))
+    if (big_float._float_part.length() == 0 || big_float._float_part == BigInteger::ZERO)
     {
         return o;
     }

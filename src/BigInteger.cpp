@@ -2,6 +2,10 @@
 #include "BigInteger.hpp"
 
 
+const BigInteger BigInteger::ZERO = BigInteger(0ll);
+const BigInteger BigInteger::ONE = BigInteger(1ll);
+const BigInteger BigInteger::TWO = BigInteger(2ll);
+
 BigInteger::BigInteger(){}
 
 BigInteger::BigInteger(const char* big_int)
@@ -65,6 +69,23 @@ BigInteger::BigInteger(long long n)
     else
     {
         _negative = n < 0;
+        while (n != 0)
+        {
+            _nums.push_back(n%10);
+            n /= 10;
+        }
+        std::reverse(_nums.begin(), _nums.end());
+    }
+}
+
+BigInteger::BigInteger(size_t n)
+{
+    if (n == 0)
+    {
+        _nums.push_back(0);
+    }
+    else
+    {
         while (n != 0)
         {
             _nums.push_back(n%10);
@@ -282,39 +303,31 @@ BigInteger BigInteger::opposite() const
 
 BigInteger &BigInteger::opposite(const bool inplace)
 {
-    if (*this == BigInteger(0ll))
+    if (*this == BigInteger::ZERO)
     {
         return *this;
     }
-    if (inplace)
+    _negative = !_negative;
+    std::vector<char>::iterator it = _nums.begin(), end = _nums.end();
+    while (it != end)
     {
-        _negative = !_negative;
-        std::vector<char>::iterator it = _nums.begin(), end = _nums.end();
-        while (it != end)
-        {
-            *it = -*it;
-            ++it;
-        }
-        return *this;
+        *it = -*it;
+        ++it;
     }
-    else
-    {
-        return -*this;
-    }
+    return *this;
 }
 
 BigInteger BigInteger::pow(const BigInteger& big_int) const
 {
-    if (big_int <= BigInteger(0ll))
+    if (big_int <= BigInteger::ZERO)
     {
-        return BigInteger(1ll);
+        return BigInteger::ONE;
     }
     BigInteger ans(*this);
     BigInteger i(1ll);
-    const BigInteger two(2ll);
     while (i < big_int)
     {
-        i *= two;
+        i *= BigInteger::TWO;
         if (i >= big_int)
         {
             if (i == big_int)
@@ -323,7 +336,7 @@ BigInteger BigInteger::pow(const BigInteger& big_int) const
             }
             else
             {
-                i /= two;
+                i /= BigInteger::TWO;
             }
             break;
         }
@@ -341,7 +354,7 @@ BigInteger BigInteger::pow(const size_t n) const
 {
     if (n == 0)
     {
-        return BigInteger(1ll);
+        return BigInteger::ONE;
     }
     size_t i = 1;
     BigInteger ans(*this);
@@ -370,24 +383,9 @@ BigInteger BigInteger::pow(const size_t n) const
     return ans;
 }
 
-BigInteger BigInteger::factorial() const
-{
-    if (*this == BigInteger(0ll))
-    {
-        return BigInteger(1ll);
-    }
-    BigInteger ans(this->abs()), count(this->abs());
-    const BigInteger two(2ll);
-    while (count > two)
-    {
-        ans *= --count;
-    }
-    return ans;
-}
-
 BigInteger operator-(const BigInteger& big_int)
 {
-    if (big_int == BigInteger(0ll))
+    if (big_int == BigInteger::ZERO)
     {
         return big_int;
     }
@@ -490,10 +488,9 @@ BigInteger BigInteger::operator-(const BigInteger& big_int) const
 
 BigInteger BigInteger::operator*(const BigInteger& big_int) const
 {
-    const BigInteger zero(0ll);
-    if (*this == zero || big_int == zero)
+    if (*this == BigInteger::ZERO || big_int == BigInteger::ZERO)
     {
-        return zero;
+        return BigInteger::ZERO;
     }
     const size_t length0 = _nums.size(), length1 = big_int._nums.size();
     const size_t m = std::min(length0, length1) / 2;
@@ -528,7 +525,7 @@ BigInteger BigInteger::operator*(const BigInteger& big_int) const
             temp_nums_add.assign(ans_nums.cbegin(), ans_nums.cend());
             ans_nums.clear();
             temp_nums_mul.assign(i, 0);
-            if (temp_nums_muls[*it_b].empty())
+            if (temp_nums_muls[std::abs(*it_b)].empty())
             {
                 while (it_a != end_of_a)
                 {
@@ -541,11 +538,11 @@ BigInteger BigInteger::operator*(const BigInteger& big_int) const
                     temp_nums_mul.push_back(temp_num);
                     temp_num = 0;
                 }
-                temp_nums_muls[*it_b].assign(temp_nums_mul.cbegin() + i, temp_nums_mul.cend());
+                temp_nums_muls[std::abs(*it_b)].assign(temp_nums_mul.cbegin() + i, temp_nums_mul.cend());
             }
             else
             {
-                temp_nums_mul.insert(temp_nums_mul.end(), temp_nums_muls[*it_b].cbegin(), temp_nums_muls[*it_b].cend());
+                temp_nums_mul.insert(temp_nums_mul.end(), temp_nums_muls[std::abs(*it_b)].cbegin(), temp_nums_muls[std::abs(*it_b)].cend());
             }
             it_add = temp_nums_add.cbegin();
             end_of_add = temp_nums_add.cend();
@@ -607,7 +604,7 @@ BigInteger BigInteger::operator/(const BigInteger& big_int) const
     const BigInteger abs_of_big_int = big_int.abs();
     if (big_int_a < abs_of_big_int)
     {
-        return BigInteger(0ll);
+        return BigInteger::ZERO;
     }
     size_t len_a = _nums.size(), len_b = big_int._nums.size();
     std::vector<char> temp_nums[10];
@@ -802,8 +799,7 @@ void BigInteger::operator-=(const BigInteger& big_int)
 
 void BigInteger::operator*=(const BigInteger& big_int)
 {
-    const BigInteger zero(0ll);
-    if (*this == zero || big_int == zero)
+    if (*this == BigInteger::ZERO || big_int == BigInteger::ZERO)
     {
         _negative = false;
         _nums.clear();
@@ -841,7 +837,7 @@ void BigInteger::operator*=(const BigInteger& big_int)
             temp_nums_add.assign(ans_nums.cbegin(), ans_nums.cend());
             ans_nums.clear();
             temp_nums_mul.assign(i, 0);
-            if (temp_nums_muls[*it_b].empty())
+            if (temp_nums_muls[std::abs(*it_b)].empty())
             {
                 while (it_a != end_of_a)
                 {
@@ -854,11 +850,11 @@ void BigInteger::operator*=(const BigInteger& big_int)
                     temp_nums_mul.push_back(temp_num);
                     temp_num = 0;
                 }
-                temp_nums_muls[*it_b].assign(temp_nums_mul.cbegin() + i, temp_nums_mul.cend());
+                temp_nums_muls[std::abs(*it_b)].assign(temp_nums_mul.cbegin() + i, temp_nums_mul.cend());
             }
             else
             {
-                temp_nums_mul.insert(temp_nums_mul.end(), temp_nums_muls[*it_b].cbegin(), temp_nums_muls[*it_b].cend());
+                temp_nums_mul.insert(temp_nums_mul.end(), temp_nums_muls[std::abs(*it_b)].cbegin(), temp_nums_muls[std::abs(*it_b)].cend());
             }
             it_add = temp_nums_add.cbegin();
             end_of_add = temp_nums_add.cend();
@@ -1210,6 +1206,17 @@ BigInteger BigInteger::operator--(const int)
 }
 
 /* --------------------------------------------------------- */
+
+size_t BigInteger::to_sizet() const
+{
+    size_t i = 0;
+    for (const char v : _nums)
+    {
+        i += v;
+        i *= 10;
+    }
+    return i;
+}
 
 std::string BigInteger::to_str() const
 {
