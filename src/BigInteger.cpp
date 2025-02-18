@@ -661,10 +661,10 @@ BigInteger BigInteger::operator%(const BigInteger& big_int) const
     BigInteger big_int_a = this->abs(), big_int_b;
     const BigInteger abs_of_big_int = big_int.abs();
     size_t len_a = _nums.size(), len_b = big_int._nums.size();
-    std::vector<char> temp_nums[10];
+    std::vector<char> temp_nums[11];
     temp_nums[1].assign(abs_of_big_int._nums.begin(), abs_of_big_int._nums.end());
     big_int_b = abs_of_big_int;
-    for (int i = 2; i < 10; ++i)
+    for (int i = 2; i < 11; ++i)
     {
         big_int_b += abs_of_big_int;
         temp_nums[i].assign(big_int_b._nums.begin(), big_int_b._nums.end());
@@ -679,7 +679,7 @@ BigInteger BigInteger::operator%(const BigInteger& big_int) const
 
             if (len_a > 1 && len_a > len_b && i == 1 && big_int_b > big_int_a)
             {
-                --len_a; 
+                --len_a;
                 continue;
             }
             else if (big_int_a < big_int_b)
@@ -966,10 +966,10 @@ void BigInteger::operator%=(const BigInteger& big_int)
     BigInteger big_int_a = this->abs(), big_int_b;
     const BigInteger abs_of_big_int = big_int.abs();
     size_t len_a = _nums.size(), len_b = big_int._nums.size();
-    std::vector<char> temp_nums[10];
+    std::vector<char> temp_nums[11];
     temp_nums[1].assign(abs_of_big_int._nums.begin(), abs_of_big_int._nums.end());
     big_int_b = abs_of_big_int;
-    for (int i = 2; i < 10; ++i)
+    for (int i = 2; i < 11; ++i)
     {
         big_int_b += abs_of_big_int;
         temp_nums[i].assign(big_int_b._nums.begin(), big_int_b._nums.end());
